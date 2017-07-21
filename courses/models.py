@@ -3,7 +3,14 @@ from __future__ import unicode_literals
 import os
 
 from django.db import models
-# from forum.models import Forum
+from django.template.defaultfilters import slugify
+
+# define the path to the guide of a course
+def guide_location( self, file ):
+
+  filename, file_extension = os.path.splitext( file )
+  return "{0}/{1}{2}".format(self.name, filename, file_extension)
+
 
 # define the path to the document assigned in a week for a certain course
 def file_location( self, file ):
@@ -16,10 +23,24 @@ class Course( models.Model ):
 
   name = models.CharField( max_length = 50 )
   code = models.CharField( max_length = 6 )
-  title = models.CharField( max_length = 100 )
   desc = models.TextField()
-  guide = models.FileField( upload_to = file_location )
+  guide = models.FileField( upload_to = guide_location )
   slug = models.SlugField( max_length = 60 )
+
+  # override the save function
+  def save( self, *args, **kwargs ):
+    
+    if not self.id:
+      
+      # Newly created object, so set slug
+      self.slug = slugify( self.name )
+
+    super( Course, self ).save( *args, **kwargs )
+
+  # default display message
+  def __unicode__( self ):
+
+    return "%s : %s" % ( self.code, self.name )
 
 
 class Week( models.Model ):
@@ -28,6 +49,21 @@ class Week( models.Model ):
   course = models.ForeignKey( Course )
   slug = models.SlugField()
 
+  # override the save function
+  def save( self, *args, **kwargs ):
+    
+    if not self.id:
+      
+      # Newly created object, so set slug
+      self.slug = slugify( self.name )
+
+    super( Week, self ).save( *args, **kwargs )
+
+  # default display message
+  def __unicode__( self ):
+
+    return "%s : %s" % ( self.course, self.name )
+
 
 class Page( models.Model ):
 
@@ -35,3 +71,18 @@ class Page( models.Model ):
   desc = models.TextField()
   week = models.ForeignKey( Week )
   slug = models.SlugField()
+
+  # override the save function
+  def save( self, *args, **kwargs ):
+    
+    if not self.id:
+      
+      # Newly created object, so set slug
+      self.slug = slugify( self.name )
+
+    super( Page, self ).save( *args, **kwargs )
+
+  # default display message
+  def __unicode__( self ):
+
+    return "%s : %s" % ( self.week, self.name )

@@ -1,3 +1,10 @@
 from django.contrib import admin
+from .models import Group
 
-# Register your models here.
+# define the group panel for the admin
+class GroupAdmin( admin.ModelAdmin ) :
+
+	exclude = ( "slug", )
+
+# register the models
+admin.site.register( Group, GroupAdmin )

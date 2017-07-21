@@ -1,3 +1,11 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def login( request ):
+
+	return render( request, "login/login.html" )
+
+
+def change_pass( request ) : 
+
+	return render( request, "login/recover.html" )

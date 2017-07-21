@@ -34,3 +34,34 @@ class Person( models.Model ):
 		choices = TYPE_CHOICES,
 		default = STUDENT,
 	)
+
+	# how the users are displayed
+	def __unicode__( self ):
+
+		return " %s " % ( self.user_id )
+
+	# override the save function
+	def save( self, *args, **kwargs ):
+		
+		# if a new user is created, and it is a tutor, create a new tutor object
+		if not self.id and self.user_type == "TU" :
+
+			super( Person, self ).save( *args, **kwargs )
+			tutor = Tutor( person = self )
+			tutor.save()
+
+		else :
+
+			super( Person , self ).save( *args, **kwargs )
+
+	class Meta :
+
+		verbose_name = "User"
+
+class Tutor( models.Model ) :
+
+	person = models.ForeignKey( Person )
+
+	def __unicode__( self ):
+
+		return " %s " % ( self.person )

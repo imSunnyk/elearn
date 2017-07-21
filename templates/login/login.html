@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+
+		<title></title>
+
+		{% load bootstrap3 %}
+		{% bootstrap_css %}
+		{% bootstrap_javascript %}
+		{% bootstrap_messages %}
+
+		<!-- Compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+
+		{% load static %}
+		<link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}">
+
+	</head>
+	
+	<body>
+
+		<div class="section"></div>
+
+		<main>
+
+			<center>
+
+				{% if login_error %}
+
+					<script type="text/javascript">
+
+						Materialize.toast("", 5000);
+
+					</script>
+
+					<div class = 'alert alert-warning' > <strong> Wrong Email or password. </strong> </div>
+
+				{% endif %}
+
+
+				<img class="responsive-img" style="width: 250px;" src="https://i.imgur.com/ax0NCsK.gif" />
+				
+				<div class="section"> </div>
+
+				<h5 class="indigo-text">Please, login into your account</h5>
+				
+				<div class="section"></div>
+
+				<div class="container">
+
+					<div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+
+						<form class="col s12" method="post">
+							
+							<div class='row'>
+							
+								<div class='col s12'></div>
+							
+							</div>
+
+							<div class='row'>
+
+								{% csrf_token %}
+							
+								{{ login_form }}
+
+							</div>
+
+							<div class='row'>
+								
+								<label style='float: center;'>
+									
+									<a class='pink-text' href='login/change_pass'> <b> Forgot Password? </b> </a>
+								
+								</label>
+							
+							</div>
+
+							<br />
+							
+							<center>
+								
+								<div class='row'>
+									
+									<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect'>Login</button>
+								
+								</div>
+							
+							</center>
+						
+						</form>
+					
+					</div>
+				
+				</div>
+			
+			</center>
+
+			<div class="section"></div>
+		
+			<div class="section"></div>
+		
+		</main>
+
+	</body>
+
+</html>
+
+
+                  
