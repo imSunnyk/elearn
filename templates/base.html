@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+
+		<title> Elearning AlpEduPro </title>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		{% load bootstrap3 %}
+		{% bootstrap_javascript %}
+		{% bootstrap_messages %}
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+
+		{% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'css/base_css.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'css/courses.css' %}">
+
+  		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	</head>
+	
+	<body style = "background-color :  #f5f5f5">
+
+		<header>
+
+			<ul id = "slide-out" class="side-nav fixed">
+
+			    <li>
+	                
+	                <div class="userView" style="margin-bottom: 0px;">
+	                
+	                	<img class="background back-img" src="/static/material/imgs/sidenav.svg">
+	                    
+						    <div class = "user-info">
+			      
+						    <center>
+
+								<a href="#!user">
+								
+									<img class="circle" src="{% static 'documents/images/generic.png' %}">
+								
+								</a>
+
+							</center>
+							
+							<span class="name"> Jondoe{{ logged_data.first_name }} {{ logged_data.last_name }} </span>
+							
+							<span class="email"> {{ logged_data.email }} Jondoe email </span>
+			   				
+			   			</div>
+	                
+	                </div>
+
+				</li>				
+
+			    <li>
+			    
+			    	<a class="subheader"> My Courses </a>
+
+			    </li>
+			    
+			    <li >
+			    
+			    	<a class="waves-effect" href="/my_courses"> 
+				    
+				    	<i class="material-icons">library_books</i> My courses
+
+				    </a>
+
+			    </li>
+
+			    {% for course in base_info.courses_list %}
+
+					<ul class="collapsible" data-collapsible="accordion">
+						
+						<li>
+
+							<div class="collapsible-header course_flag"> 
+
+								<span class = "truncate" title = "{{ course.code }} {{ course.name }}" >
+
+										<i class="material-icons course_dropdown "> arrow_drop_down </i>
+										{{ course.code }} {{ course.name }} 				 
+		
+								</span>
+
+							</div>
+
+							<div class="collapsible-body">
+								
+								<ul>
+									
+									<li class = "course_objects">
+
+								    	<a class="waves-effect" href="/my_courses/course/{{ course.slug }}">
+								    	
+								    		<i class="material-icons">book</i> Course Planner
+
+								    	</a>
+
+							    	</li>
+
+									<li class = "course_objects">
+
+								    	<a class="waves-effect" href="/forum/{{ course.slug }}">
+
+								    		<i class="material-icons"> forum </i>  Student Forum
+
+								    	</a>
+
+									</li>
+
+
+
+							    </ul>
+
+							</div>
+
+						</li>
+
+					</ul>
+
+				{% endfor %}
+
+			    <li>
+
+			    	<div class="divider"></div>
+
+			    </li>
+
+			    <li>
+			    
+			    	<a class="subheader"> Options </a>
+
+			    </li>
+			    
+			    <li >
+			    
+			    	<a class="waves-effect" href="/users/profile"> 
+				    
+				    	<i class="material-icons">account_box</i> My account
+
+				    </a>
+
+			    </li>
+
+		  
+			</ul>
+
+			<nav style = "background-color : #00695c; position:fixed;" >
+
+				<ul>
+
+					<li class = "left">
+						<a href="#" data-activates="slide-out" class="button-collapse"> <span style = "color:black;font-size:30px"> {% bootstrap_icon "th" %} </span> </a>
+
+					</li>
+
+					<li id="nav-mobile" class="right">
+						
+				    	<a class="waves-effect" href = "/login/logout" > Log out </a>
+
+					</li>
+
+				</ul>
+
+			</nav>
+
+		</header>
+
+		<main>
+
+			<div class = "row ">
+
+				<div id="content" class="col s12 m12 l12 xl12">
+
+					{% block content %}
+					
+					{% endblock content %}
+
+				</div>
+			
+			</div>
+
+		</main>
+
+		<footer class="page-footer">
+		
+			<div class="container" style = "color : #e0f2f1"> <h5> Elearning Application </h5> </div>
+			<div class="copyright-footer" style = "color : #e0f2f1">
+			<div class="container" style = "color : #e0f2f1"> <h6 id = "year">  </h6> </div>
+		
+		</footer>
+	
+	</body>
+
+	<script type="text/javascript">
+		
+		$(".button-collapse").sideNav();
+
+		year = new Date().getFullYear();
+
+		$("#year").html("Copyright @ ALPSOFT4U - " + year )
+
+		$("textarea").addClass( "materialize-textarea" );
+
+		// initialize collapsibles
+
+		  $(document).ready(function(){
+		    $('.collapsible').collapsible();
+		  });
+
+	</script>
+
+</html>	

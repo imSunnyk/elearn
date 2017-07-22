@@ -1,0 +1,153 @@
+/* The style for the main documents page */
+.documents_panel{
+	margin-top: 20px;
+}
+
+.add-document-form{
+
+	margin-top: 20px;
+
+}
+
+.back-img{
+
+	width: 100%;
+	height: 100%;
+
+}
+
+.user-info span{
+
+	text-align: center;
+	font-size: 30px;
+	color: #e0f2f1;
+	margin-top: 10px;
+
+}
+
+.waves-effect span{
+
+	color : #616161;
+
+}
+
+.subheader{
+
+	color:#424242!important;
+
+}
+
+h3 {
+
+	color: #424242 ;
+
+}
+
+nav { 
+
+	z-index: 4;
+
+}
+
+main{
+
+	flex:1;
+	margin-top: 70px;
+
+}
+
+body{
+
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow-x : hidden;
+}
+
+.page-footer {
+    padding-top: 20px;
+    background-color: #00695c;
+    padding-bottom: 5px;
+}
+
+.page-footer .footer-copyright{
+	overflow: hidden;
+	min-height: 50px;
+	display: flex;
+	align-items: center;
+	padding: 10px 0px;
+	color: rgba(255, 255, 255, 0.8);
+	background-color: rgba(51, 51, 51, 0.08);
+
+
+}
+
+html{
+	height: 100%;
+}
+
+/*#slide-out{
+	flex:1;
+}*/
+
+@media(min-width: 992px) {
+  body > footer {
+
+  	padding-left: 200px;
+
+  }
+
+  body > main {
+
+  	padding-left: 300px;
+
+  }  
+}
+
+label{
+
+	color: #424242!important;
+
+}
+
+*::-moz-placeholder{
+
+	color: #616161!important;
+}
+
+input[ type = "file" ] {
+
+	margin-bottom: 20px;
+
+}
+
+.course-activator{
+
+	cursor: pointer!important;
+
+}
+
+
+
+.course_dropdown{
+
+	color : #616161;
+    height: 48px!important;
+    line-height: 48px!important;
+    margin: 0 32px 0 0!important;
+    width: 24px!important;
+    color: rgba(0,0,0,0.54);
+}
+
+
+.course_flag{
+
+display: block;
+font-size: 14px;
+font-weight: 500;
+height: 48px;
+line-height: 48px;
+padding: 0 32px!important;
+
+
+}

@@ -35,12 +35,30 @@ class Course( models.Model ):
       # Newly created object, so set slug
       self.slug = slugify( self.name )
 
+      os.makedirs( "files/{0}/activities".format(self.name ) )
+      os.makedirs( "files/{0}/resources".format(self.name ) )
+
     super( Course, self ).save( *args, **kwargs )
 
   # default display message
   def __unicode__( self ):
 
-    return "%s : %s" % ( self.code, self.name )
+    return "%s" % ( self.name )
+
+  # custom functions
+
+  @classmethod
+  def return_courses( self, courses_ids ) :
+
+    arr = []
+
+    for course_id in courses_ids :
+
+      course = self.objects.all().get( id = course_id[ 0 ] )
+
+      arr.append( course )
+
+    return arr
 
 
 class Week( models.Model ):

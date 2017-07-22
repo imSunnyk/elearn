@@ -28,5 +28,9 @@ class Group( models.Model ):
 
 	def __unicode__( self ) : 
 
-		return " %s " % ( self.name )
+		return " %s %s " % ( self.name, self.location )
 
+	@classmethod
+	def return_student_group( self, stundent_id ):
+
+		return self.objects.values( "name" ).filter( users = stundent_id )

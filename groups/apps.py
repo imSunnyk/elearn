@@ -5,3 +5,4 @@ from django.apps import AppConfig
 
 class GroupsConfig(AppConfig):
     name = 'groups'
+    icon = '<i class="material-icons">group</i>'

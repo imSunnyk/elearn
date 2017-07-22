@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import Resource
 
-# Register your models here.
+class FileAdmin( admin.ModelAdmin ):
+
+	exclude = ( "slug", )
+
+
+admin.site.register( Resource, FileAdmin )

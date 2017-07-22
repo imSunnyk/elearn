@@ -4,6 +4,7 @@ import os
 
 from django.db import models
 from django.contrib.auth.models import User
+from courses.models import Course
 
 
 # define the path to the profile picture of a user
@@ -27,18 +28,19 @@ class Person( models.Model ):
 
 	)
 
-	user_id = models.ForeignKey( User )
+	user = models.ForeignKey( User )
 	profile_pic = models.FileField( upload_to = profile_pic )
 	user_type = models.CharField(
 		max_length = 2,
 		choices = TYPE_CHOICES,
 		default = STUDENT,
 	)
+	active_courses = models.ManyToManyField( Course )
 
 	# how the users are displayed
 	def __unicode__( self ):
 
-		return " %s " % ( self.user_id )
+		return " %s " % ( self.user )
 
 	# override the save function
 	def save( self, *args, **kwargs ):
@@ -53,6 +55,19 @@ class Person( models.Model ):
 		else :
 
 			super( Person , self ).save( *args, **kwargs )
+
+	# custom functions
+	
+	@classmethod
+	def return_student_id( self, name_id ) : # function that return the student_id of a user
+
+		return self.objects.all().get( user_id = name_id ).id
+
+	@classmethod
+	def return_student_courses( self, stundent_id ):
+
+		return self.objects.values_list( "active_courses" ).filter( id = stundent_id)
+
 
 	class Meta :
 

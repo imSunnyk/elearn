@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+	
+	<div class = "container-fluid">
+
+		{% for course in base_info.courses_list %}
+
+			<div class = "col s12 m12 l12 xl12" >
+				
+				<div class="card horizontal">
+
+					<div class="card-image">
+						
+						<img src="http://materializecss.com/images/sample-1.jpg" class = "course_image" >
+						
+					</div>
+
+					<div class = "card-stacked" >
+
+						<div class = "card-content" >
+							
+							<span class = "card-title truncate " > {{ course }}  </span>
+
+						</div>
+
+						<div class="card-action">
+
+							<a href="course/{{ course.slug }}"> Go to the course </a>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		{% endfor %}
+		
+	</div>
+		
+{% endblock content %}
