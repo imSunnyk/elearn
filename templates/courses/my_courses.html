@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% load bootstrap3 %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load staticfiles %}
+
 {% block content %}
 	
 	<div class = "container-fluid">
@@ -8,19 +13,21 @@
 
 			<div class = "col s12 m12 l12 xl12" >
 				
-				<div class="card horizontal">
-
-					<div class="card-image">
-						
-						<img src="http://materializecss.com/images/sample-1.jpg" class = "course_image" >
-						
-					</div>
+				<div class="card">
 
 					<div class = "card-stacked" >
 
 						<div class = "card-content" >
 							
-							<span class = "card-title truncate " > {{ course }}  </span>
+								<span class = "card-title" title = "{{ course.name }}" > 
+									
+									<div  class="truncate" >
+
+										{{ course.name }}
+
+									</div>
+
+								</span>
 
 						</div>
 

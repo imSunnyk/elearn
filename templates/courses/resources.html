@@ -13,8 +13,7 @@
 				<div class="col s12">
 				
 					<a href="/my_courses/course/{{ course.slug }}" class="breadcrumb"> {{ course }} </a>
-					<a href="/my_courses/week/{{ course.slug }}/{{ week.slug }}" class="breadcrumb"> {{ week.name }} </a>
-					<a href="/my_courses/page/{{ course.slug }}/{{ week.slug }}/{{ page.slug }}" class="breadcrumb"> {{ page.name }} </a>
+					<a href="/my_courses/{{ link }}/{{ course.slug }}" class="breadcrumb"> {{ type }} </a>
 				
 				</div>
 			
@@ -22,13 +21,11 @@
 		
 		</nav>		
 
-		<h2> {{ page.name }} </h2>
+		{% for resource in resources %}
 
-		<p class="flow-text" >
-		
-			{{ page.desc }}
+			<p> <a href = "/resources/resource/{{ resource.slug }}" > {{ resource.name }} </a></p>
 
-		</p>
+		{% endfor %}
 
 	</div>
 

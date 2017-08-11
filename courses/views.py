@@ -1,9 +1,13 @@
+import os
+
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
 from login.models import Person
 from groups.models import Group
-from courses.models import Course
+from resources.models import Resource 
+from courses.models import Course, Week, Page
 from django.contrib.auth.models import User
 
 # define the global context
@@ -39,20 +43,117 @@ def my_courses( request ) :
 @login_required
 def my_course( request, course_slug ) :
 
+	my_course = Course.objects.all().get( slug = course_slug )
+	weeks = Week.objects.all().filter( course = my_course.id )
+	pages = dict()
+
+	for week in weeks : 
+
+		pages[ week.id ] = Page.objects.all().filter( week = week )
+
 	context = {
 
 		"debug" : "",
-		"base_info" : GlobalContext( request )
+		"base_info" : GlobalContext( request ),
+		"course" : my_course ,
+		"weeks" : weeks,
+		"pages" : pages,
 
 	}
 
 	return render( request, "courses/course_plan.html", context )
 
+@login_required
 def week( request, course_slug, week_slug ) :
+	
+	course = Course.objects.all().get( slug = course_slug )
+	week = Week.objects.all().get( slug = week_slug, course_id = course ) 
+	pages = Page.objects.all().filter( week = week )
 
-	return render( request, "courses/week.html" )
+	context = {
 
+		"debug" : "",
+		"course" : course,
+		"week" : week,
+		"pages" : pages,
+		"base_info" : GlobalContext( request ),
 
-def page( request, week_slug, page_slug ) :
+	}
 
-	return render( request, "courses/page.html" )
+	return render( request, "courses/week.html", context )
+
+@login_required
+def page( request, course_slug, week_slug, page_slug ) :
+
+	course = Course.objects.all().get( slug = course_slug )
+	week = Week.objects.all().get( slug = week_slug, course_id = course )
+	page = Page.objects.all().get( slug = page_slug, week_id = week )
+
+	context = {
+
+		"debug" : "",
+		"course" : course,
+		"week" : week,
+		"page" : page,
+		"base_info" : GlobalContext( request ),
+
+	}
+
+	return render( request, "courses/page.html", context )
+
+@login_required
+def course_guide( request, course_slug ):
+	# get the file
+
+	guide = Course.objects.get( slug = course_slug )
+
+	file = guide.guide
+
+	base = os.path.basename( file.path )
+	file_name = os.path.splitext( base )
+
+    # get the file data
+	data = open( file.path, "r" )
+    
+    # download 
+	response = HttpResponse( data.read() , content_type='application/pdf')
+	response[ 'Content-Length' ] = os.path.getsize( file.path )
+	response['Content-Disposition'] = 'inline;filename=some_file.pdf' 
+
+	return response
+
+@login_required
+def course_resources( request, course_slug ):
+
+	course = Course.objects.all().get( slug = course_slug )
+	resources = Resource.objects.all().filter( course_id = course.id, doc_type = "CO" )
+
+	context = {
+
+		"resources" : resources,
+		"course" : course,
+		"type" : "Activities resources",
+		"link" : "course_resources_activities",
+		"base_info" : GlobalContext( request )
+
+	}
+
+	return render( request, "courses/resources.html", context )
+
+@login_required
+def course_resources_activities( request, course_slug ):
+
+	course = Course.objects.all().get( slug = course_slug )
+	resources = Resource.objects.all().filter( course_id = course.id, doc_type = "AC" )
+
+	context = {
+
+		"resources" : resources,
+		"course" : course,
+		"type" : "Activities resources",
+		"link" : "course_resources_activities",
+		"base_info" : GlobalContext( request )
+
+	}
+
+	return render( request, "courses/resources.html", context )

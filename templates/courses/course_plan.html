@@ -2,6 +2,109 @@
 
 {% block content %}
 
-	{{ debug }}	
-		
+	{{ debug }}
+
+	<div class = " col s12 m12 l12 xl12 " >
+
+		<h3> Plan de studiu {{ course.name }} </h3>
+
+		<div class = "row">
+
+			<span> {{ course.desc }} </span>
+
+		</div>
+
+		<div class = "row">
+			
+			<a href = "/my_courses/course_guide/{{ course.slug }}" target = "_blank" > 
+			
+				<span> <i class="material-icons"> picture_as_pdf </i>  Ghidul Cursului </span>
+
+			</a>
+
+		</div>
+
+		<div class = "row">
+			
+			<a href = "" >
+
+				<span> <i class="material-icons">forum</i> Forum </span>
+
+			</a>
+			
+		</div>
+
+		<div class = "row">
+			
+			<a href = "/my_courses/course_resources/{{ course.slug }}" >
+
+				<span> <i class="material-icons">folder</i> Resurse curs  </span>
+
+			</a>
+			
+		</div>
+
+
+		<div class = "row">
+			
+			<a href = "/my_courses/course_resources_activities/{{ course.slug }}" >
+
+				<span> <i class="material-icons">folder</i> Resurse activitati  </span>
+
+			</a>
+			
+		</div>
+
+		<div>
+
+			<!-- Go for each week -->
+
+			<ul class="collapsible" data-collapsible="accordion">
+
+				{% for week in weeks %}
+
+				<li>
+				
+					<div class = "collapsible-header" >
+
+						<i class="material-icons">view_week</i> 
+						{{ week.name }}
+
+					</div>
+					
+					<div class = "collapsible-body" >
+						<!-- In each week get the values in the dict -->
+
+						{%	for key, week_pages in pages.items %}
+
+							<!-- Compare if the week is good -->
+							{% if key == week.id %}
+
+								<!-- Display each page in the week -->
+								{% for page in week_pages %}
+
+									<p class="flow-text" >
+
+										<a href = "/my_courses/page/{{ course.slug }}/{{ week.slug }}/{{ page.slug }}"> {{ page }} </a>
+
+									</p>
+
+								{% endfor %}
+
+							{% endif %}
+
+						{% endfor %}
+
+					</div>
+
+				</li>
+
+				{% endfor %}
+
+			</ul>
+
+		</div>
+
+	</div>
+
 {% endblock content %}

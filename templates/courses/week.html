@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+	<div class = " col s12 m12 l12 xl12 " >
+
+		<nav class = "hide-on-small-only" style = "background-color : #00695c " >
+
+			<div class="nav-wrapper ">
+				
+				<div class="col s12">
+				
+					<a href="/my_courses/course/{{ course.slug }}" class="breadcrumb"> {{ course }} </a>
+					<a href="/my_courses/week/{{ course.slug }}/{{ week.slug }}" class="breadcrumb"> {{ week.name }} </a>
+				
+				</div>
+			
+			</div>
+		
+		</nav>		
+		
+		{% for page in pages %}
+
+			<p class="flow-text" >
+
+				<a href = "/my_courses/page/{{ course.slug }}/{{ week.slug }}/{{ page.slug }}"> {{ page }} </a>
+
+			</p>
+
+		{% endfor %}
+
+	</div>
+
+{% endblock content %}

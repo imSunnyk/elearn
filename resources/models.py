@@ -42,11 +42,22 @@ class Resource( models.Model ):
 
 	name = models.CharField( max_length = 50 )
 	course = models.ForeignKey( Course )
-	slug = models.UUIDField( default = uuid.uuid4, editable = False )
+	slug = models.CharField( max_length = 36)
 	document_path = models.FileField( upload_to = file_path )
 	doc_type = models.CharField( max_length = 2, choices = DOC_CHOICES )
 
-  # default display message
+ 	# default display message
 	def __unicode__( self ):
 
 		return " %s " % ( self.name )
+
+
+	# override the save function
+	def save( self, *args, **kwargs ):
+
+		if not self.id:
+
+			# Newly created object, so set slug
+			self.slug = str( uuid.uuid4() ).replace( "-" , "") 
+
+			super( Resource, self ).save( *args, **kwargs )
