@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{{ debug }}
+
+	<div class = " col s12 m12 l12 xl12 " >
+
+		<h4> Add Topic </h4>
+		<br>
+
+		<form method = "post">
+
+			{{ add_form }}
+			{% csrf_token %}
+
+			<button name = "add_topic"> Add topic </button>
+
+		</form>
+
+	</div>
+
+{% endblock content %}

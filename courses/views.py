@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
+from forum.models import Forum
 from login.models import Person
 from groups.models import Group
 from resources.models import Resource 
@@ -17,14 +18,16 @@ def GlobalContext( request ):
 	student_id = Person.return_student_id( request.user.id ) # get the student id from the user_id
 	courses_ids = Person.return_student_courses( student_id ) # get the ids of the courses the student attends
 	courses_list = Course.return_courses( courses_ids = courses_ids ) # get the courses
-	group_id = Group.return_student_group( student_id ) # get the groups the student is part of	
+	group_id = Group.return_student_group( student_id ) # get the groups the student is part of
+	forum_slug = Forum.objects.get( group_id = group_id[ 0 ][ "id" ] )	
 
 	return {
 
 		"user_data" : user_data,
 		"student_id" : student_id,
 		"courses_list" : courses_list,
-		"group_id" : group_id
+		"group_id" : group_id,
+		"forum_slug" : forum_slug
 
 	}
 

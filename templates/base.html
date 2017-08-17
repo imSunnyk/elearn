@@ -51,7 +51,7 @@
 							
 							<span class="name"> Jondoe{{ logged_data.first_name }} {{ logged_data.last_name }} </span>
 							
-							<span class="email"> {{ logged_data.email }} Jondoe email </span>
+							<span class="email"> {{ logged_data.email }} </span>
 			   				
 			   			</div>
 	                
@@ -108,7 +108,7 @@
 
 									<li class = "course_objects">
 
-								    	<a class="waves-effect" href="/forum/{{ course.slug }}">
+								    	<a class="waves-effect" href="/forum/{{ base_info.forum_slug.slug }}">
 
 								    		<i class="material-icons"> forum </i>  Student Forum
 

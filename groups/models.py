@@ -19,9 +19,25 @@ class Group( models.Model ):
 	def save( self, *args, **kwargs ):
 
 		if not self.id:
+			from forum.models import Forum
 
 			# Newly created object, so set slug
 			self.slug = slugify( self.name )
+
+			forum_name = "Forum-" + str( self.name )
+			
+			try : 
+
+				# try to find the last group, if not, means this is the first group created
+				last_group_id = Group.objects.latest( "id" )
+				
+				forum = Forum( name = forum_name, group_id = last_group_id + 1 )
+				forum.save()
+
+			except : 
+				forum = Forum( name = forum_name, group_id = 1 )
+				forum.save()
+			
 
 		super( Group, self ).save( *args, **kwargs )
 		
@@ -33,4 +49,4 @@ class Group( models.Model ):
 	@classmethod
 	def return_student_group( self, stundent_id ):
 
-		return self.objects.values( "name" ).filter( users = stundent_id )
+		return self.objects.values( "name", "id" ).filter( users = stundent_id )

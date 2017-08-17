@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{{ debug }}
+
+	<div class = " col s12 m12 l12 xl12 " >
+
+		<nav style = "background-color : #00695c " >
+
+			<div class="nav-wrapper ">
+
+				<div class = " col s12 hide-on-small-only " >
+					
+					<div class = " col s6 " > {{ thread.name }} </div>
+
+					<div class = "right-align col s6">
+
+						<a class="waves-effect waves-light btn" href = "/forum/add_thread/{{ forum.slug }}"> Add Thread </a>
+
+					</div>			
+
+				</div>
+
+				<div class = "col s12 hide-on-med-and-up center-align">
+					
+					<a class="waves-effect waves-light btn"> Add Thread </a>
+
+				</div>
+			
+			</div>
+		
+		</nav>		
+
+		<div class = "col s12 m12 l12 xl12 ">
+
+
+			<p>
+				
+				{{ thread.desc }}
+
+			</p>
+
+			<div class = "col s12 m12 l12 xl12">
+				
+				<form method = "post" >
+					
+					{{ comment_form }}
+					{% csrf_token %}
+
+					<button class = "btn"> Add comment </button>
+
+				</form>
+
+			</div>
+
+			<div class = "col s12 m12 l12 xl12 " >
+				
+				<h4> Comments </h4>
+
+				{% for comment in comments %}
+
+					<div class="card">
+
+						<div class = "card-stacked" >
+
+							<div class = "card-content" >
+								
+									<p> 
+										
+										<div  class="truncate" >
+
+											{{ comment.desc }}
+
+										</div>
+
+									</p>
+
+							</div>
+
+							<div class="card-action">
+
+								<p> By {{ comment.author }} </p>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				{% endfor %}
+
+			</div>
+
+
+		</div>
+		
+
+	</div>
+
+{% endblock content %}

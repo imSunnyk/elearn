@@ -21,6 +21,7 @@ urlpatterns = [
   url( r'^admin/', admin.site.urls ),
   url( r'^my_courses', include( "courses.urls" ) ),
   url( r'^resources', include( "resources.urls" ) ),
+  url( r'^forum', include( "forum.urls" ) ),
   url( r'^', include( "login.urls" ) ),
 
 ]
