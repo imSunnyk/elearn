@@ -16,17 +16,22 @@ def GlobalContext( request ):
 	student_id = Person.return_student_id( request.user.id ) # get the student id from the user_id
 	courses_ids = Person.return_student_courses( student_id ) # get the ids of the courses the student attends
 	courses_list = Course.return_courses( courses_ids = courses_ids ) # get the courses
-	group_id = Group.return_student_group( student_id ) # get the groups the student is part of	
-	forum_slug = Forum.objects.get( group_id = group_id[ 0 ][ "id" ] )
+	groups = Group.return_student_group( student_id ) # get the groups the student is part of	
+	groups_id = []
+
+	for group in groups :
+
+		groups_id.append( group[ "id" ] )
+
+	forums = Forum.objects.all().filter( group_id__in = groups_id ) 
+	
 
 	return {
 
 		"user_data" : user_data,
 		"student_id" : student_id,
-		"courses_list" : courses_list,
-		"group_id" : group_id,
-		"forum_slug" : forum_slug
-
+		"courses_list" : zip ( courses_list, forums ),
+		"group_id" : groups,
 	}
 
 
@@ -38,7 +43,7 @@ def forum_group( request, forum_slug ):
 
 	context = {
 
-		"debug" : "",
+		"debug" : GlobalContext( request )[ "courses_list" ][1][1].slug,
 		"forum" : forum,
 		"base_info" : GlobalContext( request ),
 		"threads" : threads
@@ -76,7 +81,7 @@ def topic( request, forum_slug, topic_id ):
 
 			comment = Reply( 
 				desc = form.cleaned_data[ "desc" ],
-				author_id = request.user.id,
+				author_id = Person.objects.get( user_id = request.user.id ).id,
 				replied_to_id = topic_id
 			)
 
@@ -115,7 +120,7 @@ def add_thread( request, forum_slug ):
 			topic = Thread( 
 				name = form.cleaned_data[ "name" ],
 				desc = form.cleaned_data[ "desc" ],
-				author_id = request.user.id,
+				author_id = Person.objects.get( user_id = request.user.id ).id,
 				forum_id = forum.id
 			)
 

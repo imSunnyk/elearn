@@ -83,10 +83,10 @@
 
 							<div class="collapsible-header course_flag"> 
 
-								<span class = "truncate" title = "{{ course.code }} {{ course.name }}" >
+								<span class = "truncate" title = "{{ course.0.code }} {{ course.name }}" >
 
 										<i class="material-icons course_dropdown "> arrow_drop_down </i>
-										{{ course.code }} {{ course.name }} 				 
+										{{ course.0.code }} {{ course.0.name }} 				 
 		
 								</span>
 
@@ -98,7 +98,7 @@
 									
 									<li class = "course_objects">
 
-								    	<a class="waves-effect" href="/my_courses/course/{{ course.slug }}">
+								    	<a class="waves-effect" href="/my_courses/course/{{ course.0.slug }}">
 								    	
 								    		<i class="material-icons">book</i> Course Planner
 
@@ -108,7 +108,7 @@
 
 									<li class = "course_objects">
 
-								    	<a class="waves-effect" href="/forum/{{ base_info.forum_slug.slug }}">
+								    	<a class="waves-effect" href="/forum/{{ course.1.slug }}">
 
 								    		<i class="material-icons"> forum </i>  Student Forum
 

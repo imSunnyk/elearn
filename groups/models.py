@@ -29,12 +29,13 @@ class Group( models.Model ):
 			try : 
 
 				# try to find the last group, if not, means this is the first group created
-				last_group_id = Group.objects.latest( "id" )
+				last_group_id = Group.objects.latest( "id" ).id
 				
 				forum = Forum( name = forum_name, group_id = last_group_id + 1 )
 				forum.save()
 
 			except : 
+
 				forum = Forum( name = forum_name, group_id = 1 )
 				forum.save()
 			
