@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'courses.apps.CoursesConfig',
     'forum.apps.ForumConfig',
     'login.apps.LoginConfig',
+    'series.apps.SeriesConfig',
     'groups.apps.GroupsConfig',
     'resources.apps.ResourcesConfig',
     'bootstrap3',

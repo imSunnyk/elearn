@@ -18,17 +18,22 @@ def GlobalContext( request ):
 	student_id = Person.return_student_id( request.user.id ) # get the student id from the user_id
 	courses_ids = Person.return_student_courses( student_id ) # get the ids of the courses the student attends
 	courses_list = Course.return_courses( courses_ids = courses_ids ) # get the courses
-	group_id = Group.return_student_group( student_id ) # get the groups the student is part of
-	forum_slug = Forum.objects.get( group_id = group_id[ 0 ][ "id" ] )	
+	groups = Group.return_student_group( student_id ) # get the groups the student is part of	
+	groups_id = []
+
+	for group in groups :
+
+		groups_id.append( group[ "id" ] )
+
+	forums = Forum.objects.all().filter( group_id__in = groups_id ) 
+	
 
 	return {
 
 		"user_data" : user_data,
 		"student_id" : student_id,
-		"courses_list" : courses_list,
-		"group_id" : group_id,
-		"forum_slug" : forum_slug
-
+		"courses_list" : zip ( courses_list, forums ),
+		"group_id" : groups,
 	}
 
 @login_required
@@ -37,7 +42,7 @@ def my_courses( request ) :
 	context = {
 
 		"debug" : "",
-		"base_info" : GlobalContext( request )
+		"base_info" : GlobalContext( request ),
 
 	}
 
@@ -50,6 +55,17 @@ def my_course( request, course_slug ) :
 	weeks = Week.objects.all().filter( course = my_course.id )
 	pages = dict()
 
+	# get the id of the group you are in this course
+	student_id = Person.return_student_id( request.user.id )
+	groups = Group.return_student_group( student_id )
+	gr_id = 0
+	for group in groups : 
+
+		if group[ "course_id" ] == my_course.id :
+
+			gr_id = group[ "id" ]
+
+
 	for week in weeks : 
 
 		pages[ week.id ] = Page.objects.all().filter( week = week )
@@ -61,6 +77,7 @@ def my_course( request, course_slug ) :
 		"course" : my_course ,
 		"weeks" : weeks,
 		"pages" : pages,
+		"forum" : Forum.objects.all().get( group_id = gr_id )
 
 	}
 

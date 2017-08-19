@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from courses.models import Course
 from login.models import Person
+from series.models import Series
 
 import uuid
 
@@ -13,6 +14,7 @@ class Forum( models.Model ):
 	name = models.CharField( max_length = 50 )
 	group = models.ForeignKey( Group, related_name = 'group' )
 	slug = models.CharField( max_length = 36)
+	series = models.ForeignKey( Series )
 
 	# override the save function
 	def save( self, *args, **kwargs ):

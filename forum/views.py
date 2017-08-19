@@ -43,7 +43,7 @@ def forum_group( request, forum_slug ):
 
 	context = {
 
-		"debug" : GlobalContext( request )[ "courses_list" ][1][1].slug,
+		"debug" : "",
 		"forum" : forum,
 		"base_info" : GlobalContext( request ),
 		"threads" : threads
