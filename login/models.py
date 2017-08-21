@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import os
+import uuid
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -36,6 +37,7 @@ class Person( models.Model ):
 		default = STUDENT,
 	)
 	active_courses = models.ManyToManyField( Course )
+	hash_code = models.CharField( max_length = 36, default = "" )
 
 	# how the users are displayed
 	def __unicode__( self ):

@@ -23,7 +23,7 @@
 	
 	<body>
 
-		{{ debug.id }}
+		{{ debug }}
 
 		<div class="section"></div>
 
@@ -48,7 +48,7 @@
 				
 				<div class="section"> </div>
 
-				<h5 class="indigo-text">Please, login into your account</h5>
+				<h5 class="indigo-text">Please, enter your email below</h5>
 				
 				<div class="section"></div>
 
@@ -68,18 +68,8 @@
 
 								{% csrf_token %}
 							
-								{{ login_form }}
+								{{ email_form }}
 
-							</div>
-
-							<div class='row'>
-								
-								<label style='float: center;'>
-									
-									<a class='pink-text' href='login/send_email'> <b> Forgot Password? </b> </a>
-								
-								</label>
-							
 							</div>
 
 							<br />
@@ -88,7 +78,7 @@
 								
 								<div class='row'>
 									
-									<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect'>Login</button>
+									<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect'>Send email</button>
 								
 								</div>
 							
