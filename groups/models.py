@@ -20,7 +20,10 @@ class Group( models.Model ):
 	# override the save function
 	def save( self, *args, **kwargs ):
 
+		ok = 0
+
 		if not self.id:
+
 			from forum.models import Forum
 			code = Course.objects.all().get( id = self.course.id ).code
 
@@ -36,17 +39,21 @@ class Group( models.Model ):
 				# try to find the last group, if not, means this is the first group created
 				last_group_id = Group.objects.latest( "id" ).id
 				
-				forum = Forum( name = forum_name, group_id = last_group_id + 1 )
-				forum.save()
+				forum = Forum( name = forum_name, group_id = last_group_id + 1, series_id = self.series.id )
+				ok = 1
 
 			except : 
 
-				forum = Forum( name = forum_name, group_id = 1 )
-				forum.save()
+				forum = Forum( name = forum_name, group_id = 1, series_id = self.series.id )
+				ok = 1
+				
 			
 
 		super( Group, self ).save( *args, **kwargs )
 		
+		if ok is 1 : 
+
+			forum.save()
 
 	def __unicode__( self ) : 
 

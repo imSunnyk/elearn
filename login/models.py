@@ -21,11 +21,13 @@ class Person( models.Model ):
 
 	TUTOR = "TU"
 	STUDENT = "ST"
+	ADMIN = "AD"
 
 	TYPE_CHOICES = (
 
 		( TUTOR, "Tutor" ),
 		( STUDENT, "Student" ),
+		( ADMIN, "Admin" )
 
 	)
 
