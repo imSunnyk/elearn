@@ -1,0 +1,130 @@
+{% extends "admin/base.html" %}
+
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+	
+	<script type="text/javascript"> 
+	
+		function display( begin, students_data ){
+
+			course_id = $("#id_course").val()
+
+			list_users = $(".multiple-select-dropdown")[ 1 ]; 	
+
+			if( begin == 1 ){
+
+				students = JSON.parse( $.ajax({ 
+
+					url: "http://localhost:8000/my_courses/get_students_by_course/" + course_id , // link to django view
+					async : false,
+					success: function( result ){
+						
+						return result;
+					
+					} 
+			
+				}).responseText );
+
+				if( students.length  > 0 ) {
+
+				// removes all the options in the previous list
+				$( list_users.childNodes ).each(function(i) {
+				   
+					$( this ).css( "display", "none" );
+				
+				});
+
+				for( i = 0; i < students.length; i++ ){
+
+					$( list_users.childNodes ).each( function( j ) {
+
+						if( $.trim( this.textContent ) == students[ i ].fields.username || this.textContent == "Choose your option" ) {
+
+							$( this ).css( "display", "block" );
+
+						}
+
+					});									
+
+				}
+
+			}
+
+			}else{
+
+				students = students_data;
+
+				if( students.length  > 0 ) {
+
+					// removes all the options in the previous list
+					$( list_users.childNodes ).each(function(i) {
+					   
+						$( this ).css( "display", "none" );
+					
+					});
+
+					for( i = 0; i < students.length; i++ ){
+
+						$( list_users.childNodes ).each( function( j ) {
+
+							if( $.trim( this.textContent ) == students[ i ].fields.username || this.textContent == "Choose your option" ) {
+
+								$( this ).css( "display", "block" );
+
+							}
+
+						});									
+
+					}
+
+				}
+
+			}
+
+			
+			$('li').click( function( e ) {
+
+				var target = $( e.target );
+
+				display( 0, students );
+
+			});}
+
+		// here we do garo magic
+		$(document).ready(function() {
+			
+			if($("#id_group_form_identifier").size() > 0){
+				
+				$("#id_course").on("change", function() {		
+
+					/*
+
+					console.log( $( ".select-dropdown" )[ 4 ].value = "" ) ;
+
+					$( $(".multiple-select-dropdown")[ 1 ].childNodes ).each(function(i) {
+					   
+						$( this ).removeClass( "active" );
+
+						$( this ).children( 'span' )[0].childNodes[0].checked = false;
+					
+					});
+					
+					*/					
+
+					display( 1 );
+
+				});
+			}
+		})
+
+	</script>
+
+	{% load staticfiles %}
+	
+	<!--Tinymce Text-Editor (Must be in Head Tag) -->
+	<script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/tinymce/custom.js' %}" ></script>
+
+{% endblock %}

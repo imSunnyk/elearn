@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'material',
+    'tinymce',
     'material.frontend',
     'material.admin',
     'django.contrib.admin',

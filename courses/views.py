@@ -3,6 +3,7 @@ import os
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 
 from forum.models import Forum
 from login.models import Person
@@ -177,3 +178,27 @@ def course_resources_activities( request, course_slug ):
 	}
 
 	return render( request, "courses/resources.html", context )
+
+
+# Ajax views
+
+@login_required
+def get_students_by_course( request, course_id ):
+	
+	student_ids = Person.objects.filter( active_courses = course_id ).values( "user_id" )
+
+	users = list()
+
+	for student_id in student_ids : 
+
+		user = User.objects.get( id = student_id[ "user_id" ]  )
+
+		users.append( user )
+
+	students = serializers.serialize( 
+	 	"json", 
+	 	users,
+	 	fields = ( "username" )
+	)
+
+	return HttpResponse( students );

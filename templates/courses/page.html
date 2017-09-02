@@ -26,7 +26,7 @@
 
 		<p class="flow-text" >
 		
-			{{ page.desc }}
+			{% autoescape off %} {{ page.desc }} {% endautoescape%}
 
 		</p>
 

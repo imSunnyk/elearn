@@ -9,13 +9,13 @@ from series.models import Series
 
 class Group( models.Model ):
 
-	name = models.CharField( max_length = 50 )
+	name = models.CharField( max_length = 100 )
 	slug = models.SlugField()
-	location = models.CharField( max_length = 50 )
-	course = models.ForeignKey( Course, related_name = 'course' )
-	tutors = models.ManyToManyField( Tutor, related_name = 'tutors' )
-	users = models.ManyToManyField( Person, related_name = 'users' )
-	series = models.ForeignKey( Series, related_name = 'series' )
+	location = models.CharField( max_length = 50, blank = True)
+	course = models.ForeignKey( Course, related_name = 'course', null = True, blank = True )
+	tutors = models.ManyToManyField( Tutor, related_name = 'tutors', null = True, blank = True )
+	users = models.ManyToManyField( Person, related_name = 'users', null = True, blank = True )
+	series = models.ForeignKey( Series, related_name = 'series', null = True, blank = True )
 
 	# override the save function
 	def save( self, *args, **kwargs ):

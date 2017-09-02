@@ -49,7 +49,7 @@ class Resource( models.Model ):
  	# default display message
 	def __unicode__( self ):
 
-		return " %s " % ( self.name )
+		return " %s : %s " % ( self.course, self.name )
 
 
 	# override the save function

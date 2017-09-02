@@ -4,6 +4,8 @@ import os
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from tinymce.models import HTMLField
+
 
 # define the path to the guide of a course
 def guide_location( self, file ):
@@ -23,7 +25,7 @@ class Course( models.Model ):
 
   name = models.CharField( max_length = 50 )
   code = models.CharField( max_length = 6 )
-  desc = models.TextField()
+  desc = HTMLField()
   guide = models.FileField( upload_to = guide_location )
   slug = models.SlugField( max_length = 60 )
 

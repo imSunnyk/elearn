@@ -32,7 +32,7 @@ class Person( models.Model ):
 	)
 
 	user = models.ForeignKey( User )
-	profile_pic = models.FileField( upload_to = profile_pic )
+	profile_pic = models.FileField( upload_to = profile_pic, blank=True )
 	user_type = models.CharField(
 		max_length = 2,
 		choices = TYPE_CHOICES,
@@ -40,6 +40,7 @@ class Person( models.Model ):
 	)
 	active_courses = models.ManyToManyField( Course )
 	hash_code = models.CharField( max_length = 36, default = "" )
+	birthdate = models.DateField()
 
 	# how the users are displayed
 	def __unicode__( self ):
