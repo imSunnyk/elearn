@@ -52,15 +52,9 @@ class Course( models.Model ):
   @classmethod
   def return_courses( self, courses_ids ) :
 
-    arr = []
+    courses = self.objects.all().filter( id__in = courses_ids )
 
-    for course_id in courses_ids :
-
-      course = self.objects.all().get( id = course_id[ 0 ] )
-
-      arr.append( course )
-
-    return arr
+    return courses
 
 
 class Week( models.Model ):

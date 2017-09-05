@@ -24,10 +24,18 @@ class Group( models.Model ):
 
 		if not self.id:
 
+			# iterate group name
+
+			possible_groups = Group.objects.all().filter( location = self.location, course = self.course, series = self.series )
+
+			iterator = len( possible_groups )
+
+			# forum creation
+
 			from forum.models import Forum
 			code = Course.objects.all().get( id = self.course.id ).code
 
-			self.name = "Grupa " + str( code ) + " " + str( self.location ) + " " + str( self.series )
+			self.name = "Grupa " + str( iterator ) + "  " + str( code ) + " " + str( self.location ) + " " + str( self.series )
 
 			# Newly created object, so set slug
 			self.slug = slugify( self.name )
@@ -46,6 +54,10 @@ class Group( models.Model ):
 
 				forum = Forum( name = forum_name, group_id = 1, series_id = self.series.id )
 				ok = 1
+
+
+
+
 				
 			
 

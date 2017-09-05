@@ -60,6 +60,7 @@ def topic( request, forum_slug, topic_id ):
 	class CommentForm( forms.Form ):
 
 		desc = forms.CharField( widget = forms.Textarea )
+		file = forms.FileField( label = "Attach a file ", widget = forms.ClearableFileInput( attrs = { 'multiple' : True } ), required = False )
 
 	my_comment_form = CommentForm()
 
@@ -79,11 +80,22 @@ def topic( request, forum_slug, topic_id ):
 
 		if form.is_valid():
 
-			comment = Reply( 
-				desc = form.cleaned_data[ "desc" ],
-				author_id = Person.objects.get( user_id = request.user.id ).id,
-				replied_to_id = topic_id
-			)
+			try : 
+
+				comment = Reply( 
+					desc = form.cleaned_data[ "desc" ],
+					author_id = Person.objects.get( user_id = request.user.id ).id,
+					replied_to_id = topic_id,
+					file = request.FILES[ 'file' ]
+				)
+
+			except : 
+
+				comment = Reply( 
+					desc = form.cleaned_data[ "desc" ],
+					author_id = Person.objects.get( user_id = request.user.id ).id,
+					replied_to_id = topic_id,
+				)
 
 			comment.save()
 
@@ -99,6 +111,7 @@ def add_thread( request, forum_slug ):
 
 		name = forms.CharField( max_length = 100 )
 		desc = forms.CharField( widget = forms.Textarea )
+		file = forms.FileField( label = "Attach a file ", widget = forms.ClearableFileInput( attrs = { 'multiple' : True } ), required = False )
 
 
 	my_topic_form = AddTopicForm()
@@ -116,13 +129,25 @@ def add_thread( request, forum_slug ):
 		form = AddTopicForm( request.POST )
 
 		if form.is_valid():
+			
+			try : 
 
-			topic = Thread( 
-				name = form.cleaned_data[ "name" ],
-				desc = form.cleaned_data[ "desc" ],
-				author_id = Person.objects.get( user_id = request.user.id ).id,
-				forum_id = forum.id
-			)
+				topic = Thread( 
+					name = form.cleaned_data[ "name" ],
+					desc = form.cleaned_data[ "desc" ],
+					author_id = Person.objects.get( user_id = request.user.id ).id,
+					forum_id = forum.id,
+					file = request.FILES[ 'file' ]
+				)
+
+			except : 
+
+				topic = Thread( 
+					name = form.cleaned_data[ "name" ],
+					desc = form.cleaned_data[ "desc" ],
+					author_id = Person.objects.get( user_id = request.user.id ).id,
+					forum_id = forum.id,
+				)
 
 			topic.save()
 
