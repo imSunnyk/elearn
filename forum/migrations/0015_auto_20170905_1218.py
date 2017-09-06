@@ -16,11 +16,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='reply',
             name='file',
-            field=models.FileField(blank=True, null=True, upload_to=forum.models.upload_comm_file),
+            field=models.FileField(blank=True, null=True, upload_to=forum.models.upload_file),
         ),
         migrations.AlterField(
             model_name='thread',
             name='file',
-            field=models.FileField(blank=True, null=True, upload_to=forum.models.upload_thread_file),
+            field=models.FileField(blank=True, null=True, upload_to=forum.models.upload_file),
         ),
     ]

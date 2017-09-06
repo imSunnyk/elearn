@@ -16,13 +16,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='reply',
             name='file',
-            field=models.FileField(default='files/users/7.jpeg', upload_to=forum.models.upload_comm_file),
+            field=models.FileField(default='files/users/7.jpeg', upload_to=forum.models.upload_file),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='thread',
             name='file',
-            field=models.FileField(default='files/users/7.jpeg', upload_to=forum.models.upload_thread_file),
+            field=models.FileField(default='files/users/7.jpeg', upload_to=forum.models.upload_file),
             preserve_default=False,
         ),
     ]

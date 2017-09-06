@@ -3,10 +3,12 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django import forms
 
-from .models import Forum, Thread, Reply
+from .models import Forum, Thread, Reply, FileUploaded
 from login.models import Person
 from groups.models import Group
 from courses.models import Course
+
+import os
 
 
 # define the global context
@@ -64,13 +66,21 @@ def topic( request, forum_slug, topic_id ):
 
 	my_comment_form = CommentForm()
 
+	files = FileUploaded.objects.all().filter( thread = Thread.objects.get( id = topic_id ) )
+
+	for file in files : 
+
+		file.file = str( file.file).rsplit('/', 1)[ 1 ]
+
 	context = {
 
+		"debug" : "",
 		"base_info" : GlobalContext( request ),
 		"thread" : Thread.objects.get( id = topic_id ),
 		"comment_form" : my_comment_form,
 		"comments" : Reply.objects.all().filter( replied_to_id = topic_id ),
-		"forum" : forum
+		"forum" : forum,
+		"files" : files,
 
 	}
 
@@ -80,24 +90,27 @@ def topic( request, forum_slug, topic_id ):
 
 		if form.is_valid():
 
-			try : 
-
-				comment = Reply( 
-					desc = form.cleaned_data[ "desc" ],
-					author_id = Person.objects.get( user_id = request.user.id ).id,
-					replied_to_id = topic_id,
-					file = request.FILES[ 'file' ]
-				)
-
-			except : 
-
-				comment = Reply( 
-					desc = form.cleaned_data[ "desc" ],
-					author_id = Person.objects.get( user_id = request.user.id ).id,
-					replied_to_id = topic_id,
-				)
+			comment = Reply( 
+				desc = form.cleaned_data[ "desc" ],
+				author_id = Person.objects.get( user_id = request.user.id ).id,
+				replied_to_id = topic_id,
+			)
 
 			comment.save()
+
+			files = request.FILES.getlist('file')
+
+			for f in files :
+
+				file = FileUploaded(
+
+					thread = Thread.objects.all().get( id = topic_id ),
+					reply = comment,
+					file = f
+
+				)
+
+				file.save()	
 
 	return render( request, "forum/thread.html", context )
 
@@ -125,31 +138,55 @@ def add_thread( request, forum_slug ):
 	}
 
 	if request.method == 'POST':
+
 		# create a form instance and populate it with data from the request:
 		form = AddTopicForm( request.POST )
 
-		if form.is_valid():
+		if form.is_valid() :
 			
-			try : 
-
-				topic = Thread( 
-					name = form.cleaned_data[ "name" ],
-					desc = form.cleaned_data[ "desc" ],
-					author_id = Person.objects.get( user_id = request.user.id ).id,
-					forum_id = forum.id,
-					file = request.FILES[ 'file' ]
-				)
-
-			except : 
-
-				topic = Thread( 
-					name = form.cleaned_data[ "name" ],
-					desc = form.cleaned_data[ "desc" ],
-					author_id = Person.objects.get( user_id = request.user.id ).id,
-					forum_id = forum.id,
-				)
+			topic = Thread( 
+				name = form.cleaned_data[ "name" ],
+				desc = form.cleaned_data[ "desc" ],
+				author_id = Person.objects.get( user_id = request.user.id ).id,
+				forum_id = forum.id,
+			)
 
 			topic.save()
 
+			files = request.FILES.getlist('file')
 
+			for f in files :
+
+				file = FileUploaded(
+
+					thread = topic,
+					file = f
+
+				)
+
+				file.save()
+	
 	return render( request, "forum/add_thread.html", context )	
+
+
+@login_required
+def file( request, file_slug ):
+
+	# get the file
+
+	file_obj = FileUploaded.objects.get( slug = file_slug )
+
+	file = file_obj.file
+
+	base = os.path.basename( file.path )
+	file_name = os.path.splitext( base )
+
+    # get the file data
+	data = open( file.path, "rb" ).read()
+    
+    # download 
+	response = HttpResponse( data , content_type='application/vnd')
+	response[ 'Content-Length' ] = os.path.getsize( file.path )
+	response['Content-Disposition'] = 'filename = ' + str( base ) 
+
+	return response

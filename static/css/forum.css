@@ -1,0 +1,7 @@
+.download_chip{
+	cursor: pointer;
+	float: right;
+	font-size: 16px!important;
+	line-height: 32px!important;
+	padding-left: 8px;
+}

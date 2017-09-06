@@ -6,7 +6,7 @@
 
 	<div class = " col s12 m12 l12 xl12 " >
 
-		<nav style = "background-color : #00695c " >
+<!-- 		<nav style = "background-color : #00695c " >
 
 			<div class="nav-wrapper ">
 
@@ -30,16 +30,49 @@
 			
 			</div>
 		
-		</nav>		
+		</nav>	 -->	
 
 		<div class = "col s12 m12 l12 xl12 ">
 
+			<div class = "card">
 
-			<p>
+				<div class = "card-content">
+
+					<span class = "card-title "> {{ thread.name }} </span>
+
+					<p>
+						
+						{{ thread.desc }}
+
+					</p>
 				
-				{{ thread.desc }}
+				</div>
 
-			</p>
+			</div>
+
+			{% for file in files %}
+
+				{% if file.reply is None %}
+
+					<div class="chip">
+
+						{{ file.file }}
+
+						<a href = "/forum/file/{{ file.slug }}" style = " color : #616161; " >
+
+							<i class = "download_chip material-icons">file_download</i>
+
+						</a>
+
+					</div>
+				
+				{% endif %}
+
+			{% endfor %}
+
+			<div class = "divider"></div>
+
+			<h4 class = "title" > Add a comment </h4>
 
 			<div class = "col s12 m12 l12 xl12">
 				
@@ -75,6 +108,28 @@
 										</div>
 
 									</p>
+
+									<br><br>
+
+									{% for file in files %}
+
+										{% if file.reply.id is comment.id %}
+
+											<div class="chip">
+
+												{{ file.file }}
+
+												<a href = "/forum/file/{{ file.slug }}" style = " color : #616161; " >
+
+													<i class = "download_chip material-icons">file_download</i>
+
+												</a>
+
+											</div>
+										
+										{% endif %}
+
+									{% endfor %}
 
 							</div>
 

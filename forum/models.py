@@ -8,18 +8,17 @@ from series.models import Series
 import os
 import uuid
 
-def upload_thread_file( self, file ):
+def upload_file( self, file ):
 
 	filename, file_extension = os.path.splitext( file )
 
-	return "files/threads/{0}/{1}{2}".format( self.slug, filename, file_extension )
+	if( type( self.reply ) is None ) :
 
+		return "files/threads/{0}/{1}{2}".format( self.thread.slug, filename, file_extension )
 
-def upload_comm_file( self, file ):
+	else : 
 
-	filename, file_extension = os.path.splitext( file )
-
-	return "files/threads/{0}/comms/{0}/{1}{2}".format( self.replied_to.slug, self.slug, filename, file_extension )
+		return "files/threads/{0}/comms/{1}/{2}{3}".format( self.thread.slug, self.reply.slug, filename, file_extension )
 
 
 class Forum( models.Model ):
@@ -49,7 +48,6 @@ class Thread( models.Model ):
 	forum = models.ForeignKey( Forum, default = 111, editable=False )
 	adate = models.DateField( auto_now = True )
 	slug = models.CharField( max_length = 36)
-	file = models.FileField( upload_to = upload_thread_file, blank=True, null=True )
 
 	# override the save function
 	def save( self, *args, **kwargs ):
@@ -69,7 +67,24 @@ class Reply( models.Model ):
 	adate = models.DateField( auto_now = True )
 	replied_to = models.ForeignKey( Thread )
 	author = models.ForeignKey( Person )
-	file = models.FileField( upload_to = upload_comm_file, blank=True, null=True )
+
+	# override the save function
+	def save( self, *args, **kwargs ):
+
+		if not self.id:
+
+			# Newly created object, so set slug
+			self.slug = str( uuid.uuid4() ).replace( "-" , "") 
+
+			super( Reply, self ).save( *args, **kwargs )
+
+
+class FileUploaded( models.Model ):
+
+	thread = models.ForeignKey( Thread, on_delete = models.CASCADE, related_name = "thread" )
+	reply = models.ForeignKey( Reply, blank = True, null = True, on_delete = models.CASCADE, related_name = "reply" )	
+	file = models.FileField( upload_to = upload_file, blank=True, null=True )
+	slug = models.CharField( max_length = 36 )
 
 	# override the save function
 	def save( self, *args, **kwargs ):
