@@ -36,6 +36,7 @@ def GlobalContext( request ):
 		"courses_ids" : courses_ids ,
 		"courses_list" : zip( courses_list, forums ),
 		"group_id" : groups_id,
+		"series" : user_data.series
 	}
 
 @login_required

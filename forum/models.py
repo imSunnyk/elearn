@@ -14,11 +14,11 @@ def upload_file( self, file ):
 
 	if( type( self.reply ) is None ) :
 
-		return "files/threads/{0}/{1}{2}".format( self.thread.slug, filename, file_extension )
+		return "forum/threads/{0}/{1}{2}".format( self.thread.slug, filename, file_extension )
 
 	else : 
 
-		return "files/threads/{0}/comms/{1}/{2}{3}".format( self.thread.slug, self.reply.slug, filename, file_extension )
+		return "forum/threads/{0}/comms/{1}/{2}{3}".format( self.thread.slug, self.reply.slug, filename, file_extension )
 
 
 class Forum( models.Model ):

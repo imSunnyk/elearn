@@ -34,6 +34,7 @@ def GlobalContext( request ):
 		"student_id" : student_id,
 		"courses_list" : zip ( courses_list, forums ),
 		"group_id" : groups,
+		"series" : user_data.series
 	}
 
 

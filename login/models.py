@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+
 import os
 import uuid
 
@@ -31,7 +32,7 @@ class Person( models.Model ):
 
 	)
 
-	user = models.ForeignKey( User )
+	user = models.ForeignKey( User, related_name = "user" )
 	profile_pic = models.FileField( upload_to = profile_pic, blank=True )
 	user_type = models.CharField(
 		max_length = 2,
@@ -41,6 +42,7 @@ class Person( models.Model ):
 	active_courses = models.ManyToManyField( Course )
 	hash_code = models.CharField( max_length = 36, default = "" )
 	birthdate = models.DateField()
+	series = models.ForeignKey( "series.Series", related_name = "user_series" )
 
 	# how the users are displayed
 	def __unicode__( self ):

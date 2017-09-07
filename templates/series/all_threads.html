@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{{ debug }}
+
+	<div class = " col s12 m12 l12 xl12 " >
+
+		<nav style = "background-color : #00695c " >
+
+			<div class="nav-wrapper ">
+
+				<div class = " col s12 hide-on-small-only " >
+					
+					<div class = " col s6 " > {{ series.name }} </div>
+
+					<div class = "right-align col s6">
+
+						<a class="waves-effect waves-light btn" href = "/series/add_thread/{{ series.name }}"> Add Thread </a>
+
+					</div>			
+
+				</div>
+
+				<div class = "col s12 hide-on-med-and-up center-align">
+					
+					<a class="waves-effect waves-light btn"> Add Thread </a>
+
+				</div>
+			
+			</div>
+		
+		</nav>		
+
+		<div class = "col s12 m12 l12 xl12 valign-wrapper">
+
+				<ul class="collection col s12">
+			
+					{% for thread in threads %}
+
+						<li class="collection-item avatar">
+							
+							<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Gray_-_replace_this_image_male.svg/2000px-Gray_-_replace_this_image_male.svg.png" alt="" class="circle">
+							
+							<span class="title" >{{ thread.name }}</span>
+							
+							<p style = "width : 80%">
+								
+								{{ thread.desc | truncatechars:120 }}
+							
+							</p>
+
+							<p style = " margin-top:20px; ">
+									
+								By {{ thread.author }}
+
+							</p>
+
+								<a href="/series/{{series.name}}/{{ thread.id }}" class="secondary-content  ">
+								
+									<i class="material-icons">send</i>
+
+								</a>
+						
+						</li>
+
+
+					{% endfor %}
+
+			</ul>
+
+		</div>
+		
+
+	</div>
+
+{% endblock content %}

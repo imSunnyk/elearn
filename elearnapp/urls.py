@@ -22,6 +22,7 @@ urlpatterns = [
   url( r'^my_courses', include( "courses.urls" ) ),
   url( r'^resources', include( "resources.urls" ) ),
   url( r'^forum', include( "forum.urls" ) ),
+  url( r'^series', include( "series.urls" ) ),
   url( r'^tinymce/', include('tinymce.urls')),
   url( r'^', include( "login.urls" ) ),
 

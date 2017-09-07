@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{{ debug }}
+
+	<div class = " col s12 m12 l12 xl12 " >
+
+		<h4> Add Topic </h4>
+		<br>
+
+		<form method = "post" enctype = "multipart/form-data">
+
+			{{ add_form }}
+			{% csrf_token %}
+
+			<br>
+			<button name = "add_topic"> Add topic </button>
+
+		</form>
+
+	</div>
+
+{% endblock content %}
