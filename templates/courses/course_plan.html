@@ -6,17 +6,17 @@
 
 	<div class = " col s12 m12 l12 xl12 " >
 
-		<h3> Plan de studiu {{ course.name }} </h3>
+		<h3> Plan de studiu {{ course.course_name }} </h3>
 
 		<div class = "row">
 
-			<span> {{ course.desc }} </span>
+			<span> {{ course.course_desc }} </span>
 
 		</div>
 
 		<div class = "row">
 			
-			<a href = "/my_courses/course_guide/{{ course.slug }}" target = "_blank" > 
+			<a href = "/my_courses/course_guide/{{ course.course_slug }}" target = "_blank" > 
 			
 				<span> <i class="material-icons"> picture_as_pdf </i>  Ghidul Cursului </span>
 
@@ -26,7 +26,7 @@
 
 		<div class = "row">
 			
-			<a href = "/forum/{{forum.slug}}" >
+			<a href = "/forum/{{ forum.slug }}" >
 
 				<span> <i class="material-icons">forum</i> Forum </span>
 
@@ -36,7 +36,7 @@
 
 		<div class = "row">
 			
-			<a href = "/my_courses/course_resources/{{ course.slug }}" >
+			<a href = "/my_courses/course_resources/{{ course.course_slug }}" >
 
 				<span> <i class="material-icons">folder</i> Resurse curs  </span>
 
@@ -47,7 +47,7 @@
 
 		<div class = "row">
 			
-			<a href = "/my_courses/course_resources_activities/{{ course.slug }}" >
+			<a href = "/my_courses/course_resources_activities/{{ course.course_slug }}" >
 
 				<span> <i class="material-icons">folder</i> Resurse activitati  </span>
 
@@ -61,35 +61,28 @@
 
 			<ul class="collapsible" data-collapsible="accordion">
 
-				{% for week in weeks %}
+				{% for current_week in weeks %}
 
 				<li>
 				
 					<div class = "collapsible-header" >
 
 						<i class="material-icons">view_week</i> 
-						{{ week.name }}
+						{{ current_week }}
 
 					</div>
 					
 					<div class = "collapsible-body" >
-						<!-- In each week get the values in the dict -->
 
-						{%	for key, week_pages in pages.items %}
+						{%	for book in books %}
 
-							<!-- Compare if the week is good -->
-							{% if key == week.id %}
+							{% if book.book_week.id is current_week.id %}
 
-								<!-- Display each page in the week -->
-								{% for page in week_pages %}
+								<p class="flow-text" >
 
-									<p class="flow-text" >
+									<a href = "/my_courses/book/{{ course.course_slug }}/{{ current_week.week_slug }}/{{ book.book_slug }}"> {{ book.book_name }} </a>
 
-										<a href = "/my_courses/page/{{ course.slug }}/{{ week.slug }}/{{ page.slug }}"> {{ page }} </a>
-
-									</p>
-
-								{% endfor %}
+								</p>
 
 							{% endif %}
 

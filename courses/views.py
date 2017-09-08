@@ -9,7 +9,7 @@ from forum.models import Forum
 from login.models import Person
 from groups.models import Group
 from resources.models import Resource 
-from courses.models import Course, Week, Page
+from courses.models import Course, Week, Book, Subchapter, Page
 from django.contrib.auth.models import User
 
 # define the global context
@@ -54,33 +54,22 @@ def my_courses( request ) :
 @login_required
 def my_course( request, course_slug ) :
 
-	my_course = Course.objects.all().get( slug = course_slug )
-	weeks = Week.objects.all().filter( course = my_course.id )
-	pages = dict()
-
-	# get the id of the group you are in this course
 	student_id = Person.return_student_id( request.user.id )
-	groups = Group.return_student_group( student_id )
-	gr_id = 0
-	for group in groups : 
-
-		if group[ "course_id" ] == my_course.id :
-
-			gr_id = group[ "id" ]
-
-
-	for week in weeks : 
-
-		pages[ week.id ] = Page.objects.all().filter( week = week )
+	
+	my_course = Course.objects.all().get( course_slug = course_slug )
+	my_weeks = Week.objects.all().filter( week_course = my_course.id )
+	my_course_group = Group.objects.all().get( course_id = my_course.id, users__in = [ student_id ]  )
+	my_forum = Forum.objects.all().get( group = my_course_group )
+	my_books = Book.objects.all().filter( book_week_id__in = my_weeks )
 
 	context = {
 
 		"debug" : "",
 		"base_info" : GlobalContext( request ),
 		"course" : my_course ,
-		"weeks" : weeks,
-		"pages" : pages,
-		"forum" : Forum.objects.all().get( group_id = gr_id )
+		"weeks" : my_weeks,
+		"books" : my_books,
+		"forum" : my_forum
 
 	}
 
@@ -89,16 +78,16 @@ def my_course( request, course_slug ) :
 @login_required
 def week( request, course_slug, week_slug ) :
 	
-	course = Course.objects.all().get( slug = course_slug )
-	week = Week.objects.all().get( slug = week_slug, course_id = course ) 
-	pages = Page.objects.all().filter( week = week )
+	course = Course.objects.all().get( course_slug = course_slug )
+	week = Week.objects.all().get( week_slug = week_slug, week_course_id = course ) 
+	books = Book.objects.all().filter( book_week = week )
 
 	context = {
 
 		"debug" : "",
 		"course" : course,
 		"week" : week,
-		"pages" : pages,
+		"books" : books,
 		"base_info" : GlobalContext( request ),
 
 	}
@@ -106,31 +95,35 @@ def week( request, course_slug, week_slug ) :
 	return render( request, "courses/week.html", context )
 
 @login_required
-def page( request, course_slug, week_slug, page_slug ) :
+def book( request, course_slug, week_slug, book_slug ) :
 
-	course = Course.objects.all().get( slug = course_slug )
-	week = Week.objects.all().get( slug = week_slug, course_id = course )
-	page = Page.objects.all().get( slug = page_slug, week_id = week )
+	my_course = Course.objects.all().get( course_slug = course_slug )
+	my_week = Week.objects.all().get( week_slug = week_slug, week_course = my_course )
+	my_book = Book.objects.all().get( book_slug = book_slug, book_week = my_week )
+	my_subchapters = Subchapter.objects.all().filter( subch_book = my_book )
+	my_pages = Page.objects.all().filter( page_book = my_book )
 
 	context = {
 
 		"debug" : "",
-		"course" : course,
-		"week" : week,
-		"page" : page,
+		"course" : my_course,
+		"week" : my_week,
+		"book" : my_book,
+		"subchapters" : my_subchapters ,
+		"pages" : my_pages ,
 		"base_info" : GlobalContext( request ),
 
 	}
 
-	return render( request, "courses/page.html", context )
+	return render( request, "courses/book.html", context )
 
 @login_required
 def course_guide( request, course_slug ):
 	# get the file
 
-	guide = Course.objects.get( slug = course_slug )
+	guide = Course.objects.get( course_slug = course_slug )
 
-	file = guide.guide
+	file = guide.course_guide
 
 	base = os.path.basename( file.path )
 	file_name = os.path.splitext( base )
@@ -148,7 +141,7 @@ def course_guide( request, course_slug ):
 @login_required
 def course_resources( request, course_slug ):
 
-	course = Course.objects.all().get( slug = course_slug )
+	course = Course.objects.all().get( course_slug = course_slug )
 	resources = Resource.objects.all().filter( course_id = course.id, doc_type = "CO" )
 
 	context = {
@@ -166,7 +159,7 @@ def course_resources( request, course_slug ):
 @login_required
 def course_resources_activities( request, course_slug ):
 
-	course = Course.objects.all().get( slug = course_slug )
+	course = Course.objects.all().get( course_slug = course_slug )
 	resources = Resource.objects.all().filter( course_id = course.id, doc_type = "AC" )
 
 	context = {

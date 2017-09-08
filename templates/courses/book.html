@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{{ debug }}
+		
+	<div class = " col m4 l4 xl3 right no_padding hide-on-small-only" >
+		
+		<ul id = " tabs-swipe-demo " class = " tabs my_tabs">
+			
+			{% for subchapter in subchapters %}
+
+				<li class = " tab "> <a style = "pointer-events: none;"> {{ subchapter.subch_name }} </a> </li>
+
+				{% for page in pages %}
+
+					{% if page.page_subch.id is subchapter.id %}
+
+						<li class = "tab" style = "margin-left:30px;">
+
+							{% if page.id is pages.0.id%}
+
+								<a href = "#{{page.page_slug}}" class = "active"> {{ page.page_name }} </a>
+
+							{% else %}
+
+								<a href = "#{{page.page_slug}}"> {{ page.page_name }} </a>
+
+							{% endif %}
+
+						</li>
+
+					{% endif %}
+			
+				{% endfor %}
+
+			{% endfor %}
+
+			{% for page in pages %}
+
+				{% if page.page_subch is None %}
+
+					<li class = "tab">
+
+						{% if page.id is pages.0.id%}
+
+							<a href = "#{{page.page_slug}}" class = "active"> {{ page.page_name }} </a>
+
+						{% else %}
+
+							<a href = "#{{page.page_slug}}"> {{ page.page_name }} </a>
+
+						{% endif %}
+
+					</li>
+
+				{% endif %}
+		
+			{% endfor %}
+
+		</ul>
+
+	</div>
+
+	<div class = " col m8 l8 xl9 central_panel" >
+
+		<nav class = "hide-on-med-and-down" style = "background-color : #00695c " >
+
+			<div class="nav-wrapper ">
+				
+				<div class="col s12">
+				
+					<a href="/my_courses/course/{{ course.course_slug }}" class="breadcrumb"> {{ course }} </a>
+					<a href="/my_courses/week/{{ course.course_slug }}/{{ week.week_slug }}" class="breadcrumb"> {{ week.week_name }} </a>
+					<a href="/my_courses/book/{{ course.course_slug }}/{{ week.week_slug }}/{{ book.book_slug }}" class="breadcrumb"> {{ book.book_name }} </a>
+				
+				</div>
+			
+			</div>
+		
+		</nav>		
+
+		<h2> {{ book.book_name }} </h2>
+
+		{% for page in pages %}
+
+			<div id = "{{ page.page_slug }}">
+				
+				{% autoescape off %}
+
+					{{ page.page_desc }}	
+
+				{% endautoescape %}
+
+			</div>
+
+		{% endfor %}
+
+	</div>
+    
+{% endblock content %}

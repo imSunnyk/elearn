@@ -94,10 +94,10 @@
 
 							<div class="collapsible-header course_flag"> 
 
-								<span class = "truncate" title = "{{ course.0.code }} {{ course.name }}" >
+								<span class = "truncate" title = "{{ course.0.course_code }} {{ course.0.course_name }}" >
 
 										<i class="material-icons course_dropdown "> arrow_drop_down </i>
-										{{ course.0.code }} {{ course.0.name }} 				 
+										{{ course.0.course_code }} {{ course.0.course_name }} 				 
 		
 								</span>
 
@@ -109,7 +109,7 @@
 									
 									<li class = "course_objects">
 
-								    	<a class="waves-effect" href="/my_courses/course/{{ course.0.slug }}">
+								    	<a class="waves-effect" href="/my_courses/course/{{ course.0.course_slug }}">
 								    	
 								    		<i class="material-icons">book</i> Course Planner
 

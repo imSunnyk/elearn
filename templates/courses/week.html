@@ -11,8 +11,8 @@
 				
 				<div class="col s12">
 				
-					<a href="/my_courses/course/{{ course.slug }}" class="breadcrumb"> {{ course }} </a>
-					<a href="/my_courses/week/{{ course.slug }}/{{ week.slug }}" class="breadcrumb"> {{ week.name }} </a>
+					<a href="/my_courses/course/{{ course.course_slug }}" class="breadcrumb"> {{ course }} </a>
+					<a href="/my_courses/week/{{ course.course_slug }}/{{ week.week_slug }}" class="breadcrumb"> {{ week.week_name }} </a>
 				
 				</div>
 			
@@ -20,11 +20,11 @@
 		
 		</nav>		
 		
-		{% for page in pages %}
+		{% for book in books %}
 
 			<p class="flow-text" >
 
-				<a href = "/my_courses/page/{{ course.slug }}/{{ week.slug }}/{{ page.slug }}"> {{ page }} </a>
+				<a href = "/my_courses/book/{{ course.course_slug }}/{{ week.week_slug }}/{{ book.book_slug }}"> {{ book.book_name }} </a>
 
 			</p>
 

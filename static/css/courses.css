@@ -4,3 +4,60 @@
 	width: 200px!important;
 
 }
+
+/* Book CSS */
+
+.my_tabs{
+
+	width: 100%;
+	height: 100%;
+	background-color : #00695c;
+	display: block;
+	overflow-x:hidden;
+
+}
+
+.my_tabs .tab{
+
+	display: block;
+	text-align: left;
+	width: 100%;
+
+}
+
+
+.my_tabs .tab a{
+
+	width: 100%;
+	color: white;
+
+}
+
+.my_tabs .tab a.active{
+
+	width: 100%;
+	color: white;
+
+}
+
+.my_tabs .tab a.hover{
+
+	width: 100%;
+	color: white;
+
+}
+
+.my_side_nav{
+
+	left: auto!important;
+	top: auto;
+	margin-top: -10px;
+	z-index: 3!important;
+
+}
+
+.no_padding{
+
+	padding : none!important;
+
+}

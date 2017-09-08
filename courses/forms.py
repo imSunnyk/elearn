@@ -3,8 +3,8 @@ from django import forms
 
 class PageForm( forms.ModelForm ):
     
-	desc = forms.CharField( widget = forms.Textarea, label = '' )
+	page_desc = forms.CharField( widget = forms.Textarea, label = '' )
 
 class CourseForm( forms.ModelForm ):
     
-	desc = forms.CharField( widget = forms.Textarea, label = '' )	
+	course_desc = forms.CharField( widget = forms.Textarea, label = '' )	
