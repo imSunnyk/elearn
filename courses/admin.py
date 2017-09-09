@@ -79,7 +79,7 @@ class PageAdmin( admin.ModelAdmin ) :
 class FileAdmin( admin.ModelAdmin ):
 
 	exclude = ( "file_slug", )
-	search_fields = [ "course__course_name" ]
+	search_fields = [ "resource_course__course_name" ]
 
 
 admin.site.register( Course, CourseAdmin )

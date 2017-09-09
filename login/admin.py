@@ -3,11 +3,11 @@ from .models import Person, Tutor
 
 class PersonAdmin( admin.ModelAdmin ) : 
 
-	 exclude = ( "hash_code", )
+	 exclude = ( "person_hash_code", )
 
 class TutorAdmin( admin.ModelAdmin ) : 
 
-	 exclude = ( "hash_code", )
+	 exclude = ( "person_hash_code", )
 
 # register the admin model
 

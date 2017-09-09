@@ -3,8 +3,9 @@ from __future__ import unicode_literals
 import os
 import uuid
 
-from django.db import models
 from django.template.defaultfilters import slugify
+from django.db import models
+
 from courses.models import Course
 
 
@@ -40,16 +41,16 @@ class Resource( models.Model ):
 
 	)
 
-	name = models.CharField( max_length = 50 )
-	course = models.ForeignKey( Course )
-	slug = models.CharField( max_length = 36)
-	document_path = models.FileField( upload_to = file_path )
-	doc_type = models.CharField( max_length = 2, choices = DOC_CHOICES )
+	resource_name = models.CharField( max_length = 50 )
+	resource_course = models.ForeignKey( Course )
+	resource_slug = models.CharField( max_length = 36)
+	resource_document_path = models.FileField( upload_to = file_path )
+	resource_doc_type = models.CharField( max_length = 2, choices = DOC_CHOICES )
 
  	# default display message
 	def __unicode__( self ):
 
-		return " %s : %s " % ( self.course, self.name )
+		return " %s : %s " % ( self.resource_course, self.resource_name )
 
 
 	# override the save function
@@ -58,6 +59,6 @@ class Resource( models.Model ):
 		if not self.id:
 
 			# Newly created object, so set slug
-			self.slug = str( uuid.uuid4() ).replace( "-" , "") 
+			self.resource_slug = str( uuid.uuid4() ).replace( "-" , "") 
 
 			super( Resource, self ).save( *args, **kwargs )

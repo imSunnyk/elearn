@@ -1,13 +1,12 @@
 from __future__ import unicode_literals
 
-
 import os
 import uuid
 
-from django.db import models
 from django.contrib.auth.models import User
-from courses.models import Course
+from django.db import models
 
+from courses.models import Course
 
 # define the path to the profile picture of a user
 def profile_pic( self, file ):
@@ -32,17 +31,28 @@ class Person( models.Model ):
 
 	)
 
-	user = models.ForeignKey( User, related_name = "user" )
-	profile_pic = models.FileField( upload_to = profile_pic, blank=True )
-	user_type = models.CharField(
+	user = models.ForeignKey( 
+		User, 
+		related_name = "person_user" 
+	)
+	person_profile_pic = models.FileField( 
+		upload_to = profile_pic, 
+		blank = True 
+	)
+	person_type = models.CharField(
 		max_length = 2,
 		choices = TYPE_CHOICES,
 		default = STUDENT,
 	)
-	active_courses = models.ManyToManyField( Course )
-	hash_code = models.CharField( max_length = 36, default = "" )
-	birthdate = models.DateField()
-	series = models.ForeignKey( "series.Series", related_name = "user_series" )
+	person_active_courses = models.ManyToManyField( 
+		Course 
+	)
+	person_hash_code = models.CharField( max_length = 36, default = "" )
+	person_birthdate = models.DateField()
+	person_series_id = models.ForeignKey( 
+		"series.Series", 
+		related_name = "person_user_series" 
+	)
 
 	# how the users are displayed
 	def __unicode__( self ):
@@ -53,7 +63,7 @@ class Person( models.Model ):
 	def save( self, *args, **kwargs ):
 		
 		# if a new user is created, and it is a tutor, create a new tutor object
-		if not self.id and self.user_type == "TU" :
+		if not self.id and self.person_type == "TU" :
 
 			super( Person, self ).save( *args, **kwargs )
 			tutor = Tutor( person = self )
@@ -73,7 +83,9 @@ class Person( models.Model ):
 	@classmethod
 	def return_student_courses( self, stundent_id ):
 
-		return self.objects.values_list( "active_courses" ).filter( id = stundent_id)
+		return self.objects.values_list( 
+			"person_active_courses" 
+		).filter( id = stundent_id)
 
 
 	class Meta :

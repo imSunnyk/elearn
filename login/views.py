@@ -1,16 +1,15 @@
-from django.shortcuts import render
+import uuid
+
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
-from django import forms
+from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
+from django import forms
+
 from .models import Person
 
-# import forms
-from .forms import LoginForm
+from .forms import LoginForm, ChangePassForm, MyEmailForm
 
-import uuid
 
 @login_required
 def logout_user( request ) :
@@ -21,31 +20,35 @@ def logout_user( request ) :
 
 def login_page( request ):
 
+	my_login_form = LoginForm
+
 	# define the website context
 	context = {
 
-		"login_form" : LoginForm,
+		"login_form" : my_login_form,
 		"login_error" : 0,
 		"err_message" : "",
 		"debug" : ""
 
 	}
 
-	form = LoginForm( request.POST )
+	my_form = LoginForm( request.POST )
 
 	if request.method == "POST" : 
 
 		# check form validicity
-		if form.is_valid() : 
+		if my_form.is_valid() : 
 
 			# login the user
-			user = authenticate( username = form.cleaned_data[ "username" ], 
-													 password = form.cleaned_data[ "password" ])
+			my_user = authenticate( 
+				username = form.cleaned_data[ "username" ], 
+				password = form.cleaned_data[ "password" ]
+			)
 
 			#if the account is real
-			if user is not None and user.is_active: 
+			if my_user is not None and my_user.is_active: 
 
-				login( request, user )
+				login( request, my_user )
 				return redirect( "/my_courses" )
 
 			else : 
@@ -63,20 +66,11 @@ def login_page( request ):
 
 def change_pass( request, hash_code ):
 
-	# declare the form
-	class ChangePassForm(forms.Form):
-
-		password = forms.CharField( widget = forms.PasswordInput )
-		password_confirm = forms.CharField( widget = forms.PasswordInput )
-
-	# define the varialbe that holds the form
-	MyChangePassForm = ChangePassForm()
-
-	# define context
-
+	my_change_pass_form = ChangePassForm()
+	
 	context = {
 
-		"recover_pass_form" : MyChangePassForm,
+		"recover_pass_form" : my_change_pass_form,
 		"user" : {},
 		"debug" : "",
 		"error" : ""
@@ -90,22 +84,28 @@ def change_pass( request, hash_code ):
 
 		# if the 2 passwords match
 
-		form = ChangePassForm( request.POST )
+		my_form = ChangePassForm( request.POST )
 
-		if form.is_valid() :
+		if my_form.is_valid() :
 
-			password = request.POST[ "password" ]
-			password_to_confirm = request.POST[ "password_confirm" ]
+			my_password = request.POST[ "password" ]
+			my_password_to_confirm = request.POST[ "password_confirm" ]
 
-			if password == password_to_confirm :
+			if my_password == my_password_to_confirm :
 
 				# update the user informations, then redirect the user to the main page
 
-				user = User.objects.get( id = request.session[ "user" ][ "user_id" ] )
-				user.set_password( password )
-				user.save()
+				my_user = User.objects.get( 
+					id = request.session[ "user" ][ "user_id" ]
+				)
+				my_user.set_password( password )
+				my_user.save()
 
-				person = Person.objects.filter( user_id = user.id ).update( hash_code = "" )
+				my_person = Person.objects.filter( 
+					user_id = user.id 
+				).update( 
+					person_hash_code = "" 
+				)
 
 				return redirect( "/" )
 
@@ -121,19 +121,19 @@ def change_pass( request, hash_code ):
 
 		try :
 
-			user_data = Person.objects.values( 
+			my_user_data = Person.objects.values( 
 				
 					"user_id",
 				
 				).get( 
 				
-					hash_code = hash_code
+					person_hash_code = hash_code
 
 				)
 
-			if user_data[ "user_id" ] > 0 :
+			if my_user_data[ "user_id" ] > 0 :
 
-				request.session[ "user" ] = user_data
+				request.session[ "user" ] = my_user_data
 
 				# if yes, show recover page
 
@@ -148,11 +148,6 @@ def change_pass( request, hash_code ):
 
 def send_email( request ) : 
 
-	class MyEmailForm( forms.Form ) :
-
-		email = forms.EmailField()
-
-
 	my_email_form = MyEmailForm()
 
 	context = {
@@ -164,30 +159,31 @@ def send_email( request ) :
 
 	if request.method == "POST" : 
 
+		my_form = MyEmailForm( request.POST )
 
-		form = MyEmailForm( request.POST )
-
-		if form.is_valid() : 
+		if my_form.is_valid() : 
 
 			try : 
 
-				destination = form.cleaned_data[ "email" ]
+				my_destination = my_form.cleaned_data[ "email" ]
 				
 				# create code
-				code = str( uuid.uuid4() ).replace( "-" , "")
+				my_code = str( uuid.uuid4() ).replace( "-" , "")
 				
 				# find user
-				user = User.objects.get( email = form.cleaned_data[ "email" ] )
+				my_user = User.objects.get( 
+					email = form.cleaned_data[ "email" ]
+				)
 
 				# find user extension and set hashcode
-				person = Person.objects.get( user_id = user.id )
-				person.hash_code = code
-				person.save()
+				my_person = Person.objects.get( user_id = user.id )
+				my_person.person_hash_code = my_code
+				my_person.save()
 
 				message = """ 
 					Good day sir or madam. <br><br>
 					The link for the recovery of your password is : 
-					<a href = 'localhost:8000/login/change_pass/""" + str(  ) + """' > Click here </a> <br><br>
+					<a href = 'localhost:8000/login/change_pass/""" + str( my_code ) + """' > Click here </a> <br><br>
 					If you encounter any problems, do not hesitate to contact us . <br><br>
 					Best wishes and a happy day ! <br><br>
 					Sincerely, <br><br>

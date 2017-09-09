@@ -1,8 +1,8 @@
 import os
 
-from django.shortcuts import render
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import render
 
 from resources.models import Resource 
 
@@ -10,19 +10,19 @@ from resources.models import Resource
 def resource( request, resource_slug ):
 	# get the file
 
-	res = Resource.objects.all().get( slug = resource_slug )
+	my_res = Resource.objects.all().get( resource_slug = resource_slug )
 
-	file = res.document_path
+	my_file = my_res.document_path
 
-	base = os.path.basename( file.path )
-	file_name = os.path.splitext( base )
+	my_base = os.path.basename( my_file.path )
+	my_file_name = os.path.splitext( my_base )
 
     # get the file data
-	data = open( file.path, "r" )
+	my_data = open( my_file.path, "r" )
     
     # download 
-	response = HttpResponse( data.read() , content_type='application/vnd')
-	response[ 'Content-Length' ] = os.path.getsize( file.path )
+	response = HttpResponse( my_data.read() , content_type='application/vnd')
+	response[ 'Content-Length' ] = os.path.getsize( my_file.path )
 	response['Content-Disposition'] = 'inline;filename=some_file.pdf' 
 
 	return response
