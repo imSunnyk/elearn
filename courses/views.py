@@ -1,19 +1,18 @@
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
+from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.core import serializers
-from django.shortcuts import render
 
 
-from forum.models import Forum
+from courses.models import Course, Week, Book, Subchapter, Page
+from resources.models import Resource 
 from login.models import Person
 from groups.models import Group
-from resources.models import Resource 
-from courses.models import Course, Week, Book, Subchapter, Page
-from django.contrib.auth.models import User
+from forum.models import Forum
 
 
 @login_required
@@ -26,6 +25,7 @@ def my_courses( request ) :
 	}
 
 	return render( request, "courses/my_courses.html", context )
+
 
 @login_required
 def my_course( request, course_slug ) :
@@ -50,6 +50,7 @@ def my_course( request, course_slug ) :
 
 	return render( request, "courses/course_plan.html", context )
 
+
 @login_required
 def week( request, course_slug, week_slug ) :
 	
@@ -67,6 +68,7 @@ def week( request, course_slug, week_slug ) :
 	}
 
 	return render( request, "courses/week.html", context  )
+
 
 @login_required
 def book( request, course_slug, week_slug, book_slug ) :
@@ -90,6 +92,7 @@ def book( request, course_slug, week_slug, book_slug ) :
 
 	return render( request, "courses/book.html", context )
 
+
 @login_required
 def course_guide( request, course_slug ):
 	# get the file
@@ -111,6 +114,7 @@ def course_guide( request, course_slug ):
 
 	return response
 
+
 @login_required
 def course_resources( request, course_slug ):
 
@@ -127,6 +131,7 @@ def course_resources( request, course_slug ):
 	}
 
 	return render( request, "courses/resources.html", context )
+
 
 @login_required
 def course_resources_activities( request, course_slug ):

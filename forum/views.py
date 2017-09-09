@@ -1,85 +1,53 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from django import forms
-
-from .models import Forum, Thread, Reply, FileUploaded
-from login.models import Person
-from groups.models import Group
-from courses.models import Course
-
 import os
 
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import render
 
-# define the global context
-def GlobalContext( request ):
-
-	user_data = Person.objects.all().get( user_id = request.user.id ) # get the user_data
-	student_id = Person.return_student_id( request.user.id ) # get the student id from the user_id
-	courses_ids = Person.return_student_courses( student_id ) # get the ids of the courses the student attends
-	courses_list = Course.return_courses( courses_ids = courses_ids ) # get the courses
-	groups = Group.return_student_group( student_id ) # get the groups the student is part of	
-	groups_id = []
-
-	for group in groups :
-
-		groups_id.append( group[ "id" ] )
-
-	forums = Forum.objects.all().filter( group_id__in = groups_id ) 
-	
-
-	return {
-
-		"user_data" : user_data,
-		"student_id" : student_id,
-		"courses_list" : zip ( courses_list, forums ),
-		"group_id" : groups,
-		"series" : user_data.series
-	}
+from .models import Forum, Thread, Reply, FileUploaded
+from courses.models import Course
+from groups.models import Group
+from login.models import Person
+from .forms import CommentForm, AddTopicForm
 
 
 @login_required
 def forum_group( request, forum_slug ):
 
-	forum = Forum.objects.get( slug = forum_slug )
-	threads = Thread.objects.filter( forum_id = forum.id )
+	my_forum = Forum.objects.get( slug = forum_slug )
+	my_threads = Thread.objects.filter( forum_id = my_forum.id )
 
 	context = {
 
+		"threads" : my_threads,
+		"forum" : my_forum,
 		"debug" : "",
-		"forum" : forum,
-		"base_info" : GlobalContext( request ),
-		"threads" : threads
 		
 	}
 
 	return render( request, "forum/all_threads.html", context )
 
+
 @login_required
 def topic( request, forum_slug, topic_id ):
 
-	forum = Forum.objects.get( slug = forum_slug )
+	my_forum = Forum.objects.get( slug = forum_slug )
+	my_files = FileUploaded.objects.all().filter( 
+		thread = Thread.objects.get( id = topic_id ) 
+	)
 
-	class CommentForm( forms.Form ):
+	for my_file in my_files : 
 
-		desc = forms.CharField( widget = forms.Textarea )
-		file = forms.FileField( label = "Attach a file ", widget = forms.ClearableFileInput( attrs = { 'multiple' : True } ), required = False )
+		my_file.file = str( my_file.file).rsplit('/', 1)[ 1 ]
 
 	my_comment_form = CommentForm()
-
-	files = FileUploaded.objects.all().filter( thread = Thread.objects.get( id = topic_id ) )
-
-	for file in files : 
-
-		file.file = str( file.file).rsplit('/', 1)[ 1 ]
 
 	context = {
 
 		"debug" : "",
-		"base_info" : GlobalContext( request ),
+		"comments" : Reply.objects.all().filter( replied_to_id = topic_id ),
 		"thread" : Thread.objects.get( id = topic_id ),
 		"comment_form" : my_comment_form,
-		"comments" : Reply.objects.all().filter( replied_to_id = topic_id ),
 		"forum" : forum,
 		"files" : files,
 
@@ -87,31 +55,27 @@ def topic( request, forum_slug, topic_id ):
 
 	if request.method == 'POST':
 		# create a form instance and populate it with data from the request:
-		form = CommentForm( request.POST )
+		my_post_form = CommentForm( request.POST )
 
-		if form.is_valid():
+		if my_post_form.is_valid():
 
-			comment = Reply( 
-				desc = form.cleaned_data[ "desc" ],
+			my_post_comment = Reply( 
+				desc = my_post_form.cleaned_data[ "desc" ],
 				author_id = Person.objects.get( user_id = request.user.id ).id,
 				replied_to_id = topic_id,
 			)
 
-			comment.save()
+			my_post_comment.save()
 
-			files = request.FILES.getlist('file')
+			my_post_files = request.FILES.getlist('file')
+			for my_post_f in my_post_files :
 
-			for f in files :
-
-				file = FileUploaded(
-
+				my_post_file = FileUploaded(
 					thread = Thread.objects.all().get( id = topic_id ),
-					reply = comment,
-					file = f
-
+					reply = my_post_comment,
+					file = my_post_f
 				)
-
-				file.save()	
+				my_post_file.save()	
 
 	return render( request, "forum/thread.html", context )
 
@@ -119,21 +83,12 @@ def topic( request, forum_slug, topic_id ):
 @login_required
 def add_thread( request, forum_slug ):
 
-	forum = Forum.objects.get( slug = forum_slug )
-
-	class AddTopicForm( forms.Form ):
-
-		name = forms.CharField( max_length = 100 )
-		desc = forms.CharField( widget = forms.Textarea )
-		file = forms.FileField( label = "Attach a file ", widget = forms.ClearableFileInput( attrs = { 'multiple' : True } ), required = False )
-
-
+	my_forum = Forum.objects.get( slug = forum_slug )
 	my_topic_form = AddTopicForm()
 
 	context = {
 
 		"debug" : "",
-		"base_info" : GlobalContext( request ),
 		"add_form" : my_topic_form
 
 	}
@@ -141,31 +96,31 @@ def add_thread( request, forum_slug ):
 	if request.method == 'POST':
 
 		# create a form instance and populate it with data from the request:
-		form = AddTopicForm( request.POST )
+		my_post_form = AddTopicForm( request.POST )
 
-		if form.is_valid() :
+		if my_post_form.is_valid() :
 			
-			topic = Thread( 
-				name = form.cleaned_data[ "name" ],
-				desc = form.cleaned_data[ "desc" ],
+			my_post_topic = Thread( 
+				name = my_post_form.cleaned_data[ "name" ],
+				desc = my_post_form.cleaned_data[ "desc" ],
 				author_id = Person.objects.get( user_id = request.user.id ).id,
-				forum_id = forum.id,
+				forum_id = my_forum.id,
 			)
 
-			topic.save()
+			my_post_topic.save()
 
-			files = request.FILES.getlist('file')
+			my_post_files = request.FILES.getlist('file')
 
-			for f in files :
+			for my_post_f in my_post_files :
 
-				file = FileUploaded(
+				my_post_file = FileUploaded(
 
-					thread = topic,
-					file = f
+					thread = my_post_topic,
+					file = my_post_f
 
 				)
 
-				file.save()
+				my_post_file.save()
 	
 	return render( request, "forum/add_thread.html", context )	
 
@@ -175,19 +130,19 @@ def file( request, file_slug ):
 
 	# get the file
 
-	file_obj = FileUploaded.objects.get( slug = file_slug )
+	my_file_obj = FileUploaded.objects.get( slug = file_slug )
 
-	file = file_obj.file
+	my_file = my_file_obj.file
 
-	base = os.path.basename( file.path )
-	file_name = os.path.splitext( base )
+	my_base = os.path.basename( my_file.path )
+	my_file_name = os.path.splitext( my_base )
 
     # get the file data
-	data = open( file.path, "rb" ).read()
+	my_data = open( my_file.path, "rb" ).read()
     
     # download 
-	response = HttpResponse( data , content_type='application/vnd')
-	response[ 'Content-Length' ] = os.path.getsize( file.path )
-	response['Content-Disposition'] = 'filename = ' + str( base ) 
+	response = HttpResponse( my_data , content_type='application/vnd')
+	response[ 'Content-Length' ] = os.path.getsize( my_file.path )
+	response['Content-Disposition'] = 'filename = ' + str( my_base ) 
 
 	return response

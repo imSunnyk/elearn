@@ -1,12 +1,15 @@
 from __future__ import unicode_literals
 
-from django.db import models
-from courses.models import Course
-from login.models import Person
-from series.models import Series
-
 import os
 import uuid
+
+from django.db import models
+
+from courses.models import Course
+from series.models import Series
+from login.models import Person
+
+
 
 def upload_file( self, file ):
 
@@ -14,20 +17,28 @@ def upload_file( self, file ):
 
 	if( type( self.reply ) is None ) :
 
-		return "forum/threads/{0}/{1}{2}".format( self.thread.slug, filename, file_extension )
+		return "forum/threads/{0}/{1}{2}".format( 
+			self.thread.slug, filename, file_extension 
+		)
 
 	else : 
 
-		return "forum/threads/{0}/comms/{1}/{2}{3}".format( self.thread.slug, self.reply.slug, filename, file_extension )
+		return "forum/threads/{0}/comms/{1}/{2}{3}".format( 
+			self.thread.slug, self.reply.slug, filename, file_extension 
+		)
 
 
 class Forum( models.Model ):
 	from groups.models import Group
 
-	name = models.CharField( max_length = 50 )
-	group = models.ForeignKey( Group, related_name = 'group', on_delete = models.CASCADE )
-	slug = models.CharField( max_length = 36)
-	series = models.ForeignKey( Series )
+	forum_name = models.CharField( max_length = 50 )
+	forum_group = models.ForeignKey( 
+		Group, 
+		related_name = 'group', 
+		on_delete = models.CASCADE 
+	)
+	forum_slug = models.CharField( max_length = 36)
+	forum_series = models.ForeignKey( Series )
 
 	# override the save function
 	def save( self, *args, **kwargs ):
@@ -35,19 +46,19 @@ class Forum( models.Model ):
 		if not self.id:
 
 			# Newly created object, so set slug
-			self.slug = str( uuid.uuid4() ).replace( "-" , "") 
+			self.forum_slug = str( uuid.uuid4() ).replace( "-" , "") 
 
 			super( Forum, self ).save( *args, **kwargs )
 
 
 class Thread( models.Model ):
 
-	name = models.CharField( max_length = 50 )
-	author = models.ForeignKey( Person )
-	desc = models.TextField()
-	forum = models.ForeignKey( Forum, default = 111, editable=False )
-	adate = models.DateField( auto_now = True )
-	slug = models.CharField( max_length = 36)
+	thread_name = models.CharField( max_length = 50 )
+	thread_author = models.ForeignKey( Person )
+	thread_desc = models.TextField()
+	thread_forum = models.ForeignKey( Forum, default = 111, editable=False )
+	thread_adate = models.DateField( auto_now = True )
+	thread_slug = models.CharField( max_length = 36)
 
 	# override the save function
 	def save( self, *args, **kwargs ):
@@ -55,18 +66,18 @@ class Thread( models.Model ):
 		if not self.id:
 
 			# Newly created object, so set slug
-			self.slug = str( uuid.uuid4() ).replace( "-" , "") 
+			self.thread_slug = str( uuid.uuid4() ).replace( "-" , "") 
 
 			super( Thread, self ).save( *args, **kwargs )
 
 
 class Reply( models.Model ):
 
-	slug = models.CharField( max_length = 36 )
-	desc = models.TextField()
-	adate = models.DateField( auto_now = True )
-	replied_to = models.ForeignKey( Thread )
-	author = models.ForeignKey( Person )
+	reply_slug = models.CharField( max_length = 36 )
+	reply_desc = models.TextField()
+	reply_adate = models.DateField( auto_now = True )
+	reply_replied_to = models.ForeignKey( Thread )
+	reply_author = models.ForeignKey( Person )
 
 	# override the save function
 	def save( self, *args, **kwargs ):
@@ -74,17 +85,31 @@ class Reply( models.Model ):
 		if not self.id:
 
 			# Newly created object, so set slug
-			self.slug = str( uuid.uuid4() ).replace( "-" , "") 
+			self.reply_slug = str( uuid.uuid4() ).replace( "-" , "") 
 
 			super( Reply, self ).save( *args, **kwargs )
 
 
 class FileUploaded( models.Model ):
 
-	thread = models.ForeignKey( Thread, on_delete = models.CASCADE, related_name = "thread" )
-	reply = models.ForeignKey( Reply, blank = True, null = True, on_delete = models.CASCADE, related_name = "reply" )	
-	file = models.FileField( upload_to = upload_file, blank=True, null=True )
-	slug = models.CharField( max_length = 36 )
+	file_thread = models.ForeignKey( 
+		Thread, 
+		on_delete = models.CASCADE, 
+		related_name = "thread" 
+	)
+	file_reply = models.ForeignKey( 
+		Reply, 
+		blank = True, 
+		null = True, 
+		on_delete = models.CASCADE, 
+		related_name = "reply" 
+	)	
+	file_file_path = models.FileField( 
+		upload_to = upload_file, 
+		blank=True, 
+		null=True 
+	)
+	file_slug = models.CharField( max_length = 36 )
 
 	# override the save function
 	def save( self, *args, **kwargs ):
@@ -92,6 +117,6 @@ class FileUploaded( models.Model ):
 		if not self.id:
 
 			# Newly created object, so set slug
-			self.slug = str( uuid.uuid4() ).replace( "-" , "") 
+			self.file_slug = str( uuid.uuid4() ).replace( "-" , "") 
 
-			super( Reply, self ).save( *args, **kwargs )
+			super( FileUploaded, self ).save( *args, **kwargs )
