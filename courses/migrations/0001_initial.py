@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('code', models.CharField(max_length=6)),
                 ('title', models.CharField(max_length=100)),
                 ('desc', models.TextField()),
-                ('guide', models.FileField(upload_to=courses.models.file_location)),
+                ('guide', models.FileField(upload_to=courses.models.guide_location)),
                 ('slug', models.SlugField(max_length=60)),
             ],
         ),

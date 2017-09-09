@@ -15,16 +15,16 @@ def upload_file( self, file ):
 
 	filename, file_extension = os.path.splitext( file )
 
-	if( type( self.reply ) is None ) :
+	if( self.file_reply is None ) :
 
 		return "forum/threads/{0}/{1}{2}".format( 
-			self.thread.slug, filename, file_extension 
+			self.file_thread.thread_slug, filename, file_extension 
 		)
 
 	else : 
 
 		return "forum/threads/{0}/comms/{1}/{2}{3}".format( 
-			self.thread.slug, self.reply.slug, filename, file_extension 
+			self.file_thread.thread_slug, self.file_reply.reply_slug, filename, file_extension 
 		)
 
 

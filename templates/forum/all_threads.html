@@ -12,11 +12,11 @@
 
 				<div class = " col s12 hide-on-small-only " >
 					
-					<div class = " col s6 " > {{ forum.name }} </div>
+					<div class = " col s6 " > {{ forum.forum_name }} </div>
 
 					<div class = "right-align col s6">
 
-						<a class="waves-effect waves-light btn" href = "/forum/add_thread/{{ forum.slug }}"> Add Thread </a>
+						<a class="waves-effect waves-light btn" href = "/forum/add_thread/{{ forum.forum_slug }}"> Add Thread </a>
 
 					</div>			
 
@@ -42,21 +42,21 @@
 							
 							<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Gray_-_replace_this_image_male.svg/2000px-Gray_-_replace_this_image_male.svg.png" alt="" class="circle">
 							
-							<span class="title" >{{ thread.name }}</span>
+							<span class="title" >{{ thread.thread_name }}</span>
 							
 							<p style = "width : 80%">
 								
-								{{ thread.desc | truncatechars:120 }}
+								{{ thread.thread_desc | truncatechars:120 }}
 							
 							</p>
 
 							<p style = " margin-top:20px; ">
 									
-								By {{ thread.author }}
+								By {{ thread.thread_author }}
 
 							</p>
 
-								<a href="/forum/{{forum.slug}}/{{ thread.id }}" class="secondary-content  ">
+								<a href="/forum/{{forum.forum_slug}}/{{ thread.id }}" class="secondary-content  ">
 								
 									<i class="material-icons">send</i>
 

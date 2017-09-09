@@ -11,12 +11,16 @@ def courseinfo( request ) :
 	try :
 
 		my_user_data = User.objects.all().get( id = request.user.id ) 
-		my_student_data = Person.objects.all().get( user_id = request.user.id ) 
+		my_student_data = Person.objects.all().get( user_id = request.user.id )
+
 		my_courses_ids = Person.return_student_courses( my_student_data.id ) 
 		my_courses_list = Course.return_courses( courses_ids = my_courses_ids )     
 		
 		my_groups = Group.return_student_group( my_student_data.id )	
-		my_forums = Forum.objects.all().filter( group_id__in = my_groups )
+		my_forums = Forum.objects.all().filter( forum_group_id__in = my_groups )
+
+
+		print my_groups
 
 		return {
 
@@ -25,9 +29,9 @@ def courseinfo( request ) :
 			"student_id" : my_student_data.id,
 			"courses_ids" : my_courses_ids ,
 			"courses_list" : zip( my_courses_list, my_forums ),
-			"series" : my_student_data.series
+			"series" : my_student_data.person_series
 		}
 
 	except : 
 
-		return {}
+	 	return {}

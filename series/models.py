@@ -11,11 +11,11 @@ def upload_file( self, file ):
 
 	filename, file_extension = os.path.splitext( file )
 
-	if( self.reply is None ) :
+	if( self.series_file_reply is None ) :
 
 		return "series/{0}/threads/{1}/{2}{3}".format( 
-			self.thread.series.series_thread_name, 
-			self.thread.series_thread_slug, 
+			self.series_file_thread.series_thread_series.series_name, 
+			self.series_file_thread.series_thread_slug, 
 			filename, 
 			file_extension 
 		)
@@ -23,9 +23,9 @@ def upload_file( self, file ):
 	else : 
 
 		return "series/{0}/threads/{1}/comms/{2}/{3}{4}".format( 
-			self.thread.series.series_name, 
-			self.thread.series_thread_slug, 
-			self.reply.series_reply_slug, 
+			self.series_file_thread.series_thread_series.series_name, 
+			self.series_file_thread.series_thread_slug, 
+			self.series_file_reply.series_reply_slug, 
 			filename, 
 			file_extension 
 		)

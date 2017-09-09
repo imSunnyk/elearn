@@ -3,23 +3,20 @@ from __future__ import unicode_literals
 import os
 import uuid
 
-from django.db import models
 from django.template.defaultfilters import slugify
 from tinymce.models import HTMLField
+from django.db import models
 
 
 # define the path to the guide of a course
 def guide_location( self, file ):
 
   filename, file_extension = os.path.splitext( file )
-  return "courses/{0}/{1}{2}".format(self.name, filename, file_extension)
-
-
-# define the path to the document assigned in a week for a certain course
-def file_location( self, file ):
-
-  filename, file_extension = os.path.splitext( file )
-  return "courses/{0}/{1}/{2}{3}".format(self.course, self.week, filename, file_extension)
+  return "courses/{0}/{1}{2}".format(
+    self.course_name, 
+    filename, 
+    file_extension
+  )
 
 
 class Course( models.Model ): 
@@ -122,6 +119,7 @@ class Subchapter( models.Model ) :
   def __unicode__( self ):
 
     return "%s : %s" % ( self.subch_book, self.subch_name )
+
 
 class Page( models.Model ):
 

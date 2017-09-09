@@ -14,8 +14,8 @@ from .forms import CommentForm, AddTopicForm
 @login_required
 def forum_group( request, forum_slug ):
 
-	my_forum = Forum.objects.get( slug = forum_slug )
-	my_threads = Thread.objects.filter( forum_id = my_forum.id )
+	my_forum = Forum.objects.get( forum_slug = forum_slug )
+	my_threads = Thread.objects.filter( thread_forum_id = my_forum.id )
 
 	context = {
 
@@ -31,25 +31,25 @@ def forum_group( request, forum_slug ):
 @login_required
 def topic( request, forum_slug, topic_id ):
 
-	my_forum = Forum.objects.get( slug = forum_slug )
+	my_forum = Forum.objects.get( forum_slug = forum_slug )
 	my_files = FileUploaded.objects.all().filter( 
-		thread = Thread.objects.get( id = topic_id ) 
+		file_thread = Thread.objects.get( id = topic_id ) 
 	)
 
 	for my_file in my_files : 
 
-		my_file.file = str( my_file.file).rsplit('/', 1)[ 1 ]
+		my_file.file = str( my_file.file_file_path).rsplit('/', 1)[ 1 ]
 
 	my_comment_form = CommentForm()
 
 	context = {
 
 		"debug" : "",
-		"comments" : Reply.objects.all().filter( replied_to_id = topic_id ),
+		"comments" : Reply.objects.all().filter( reply_replied_to_id = topic_id ),
 		"thread" : Thread.objects.get( id = topic_id ),
 		"comment_form" : my_comment_form,
-		"forum" : forum,
-		"files" : files,
+		"forum" : my_forum,
+		"files" : my_files,
 
 	}
 
@@ -60,9 +60,9 @@ def topic( request, forum_slug, topic_id ):
 		if my_post_form.is_valid():
 
 			my_post_comment = Reply( 
-				desc = my_post_form.cleaned_data[ "desc" ],
-				author_id = Person.objects.get( user_id = request.user.id ).id,
-				replied_to_id = topic_id,
+				reply_desc = my_post_form.cleaned_data[ "desc" ],
+				reply_author_id = Person.objects.get( user_id = request.user.id ).id,
+				reply_replied_to_id = topic_id,
 			)
 
 			my_post_comment.save()
@@ -71,9 +71,9 @@ def topic( request, forum_slug, topic_id ):
 			for my_post_f in my_post_files :
 
 				my_post_file = FileUploaded(
-					thread = Thread.objects.all().get( id = topic_id ),
-					reply = my_post_comment,
-					file = my_post_f
+					file_thread = Thread.objects.all().get( id = topic_id ),
+					file_reply_id = my_post_comment.id,
+					file_file_path = my_post_f
 				)
 				my_post_file.save()	
 
@@ -83,7 +83,7 @@ def topic( request, forum_slug, topic_id ):
 @login_required
 def add_thread( request, forum_slug ):
 
-	my_forum = Forum.objects.get( slug = forum_slug )
+	my_forum = Forum.objects.get( forum_slug = forum_slug )
 	my_topic_form = AddTopicForm()
 
 	context = {
@@ -101,10 +101,10 @@ def add_thread( request, forum_slug ):
 		if my_post_form.is_valid() :
 			
 			my_post_topic = Thread( 
-				name = my_post_form.cleaned_data[ "name" ],
-				desc = my_post_form.cleaned_data[ "desc" ],
-				author_id = Person.objects.get( user_id = request.user.id ).id,
-				forum_id = my_forum.id,
+				thread_name = my_post_form.cleaned_data[ "name" ],
+				thread_desc = my_post_form.cleaned_data[ "desc" ],
+				thread_author_id = Person.objects.get( user_id = request.user.id ).id,
+				thread_forum_id = my_forum.id,
 			)
 
 			my_post_topic.save()
@@ -115,8 +115,8 @@ def add_thread( request, forum_slug ):
 
 				my_post_file = FileUploaded(
 
-					thread = my_post_topic,
-					file = my_post_f
+					file_thread = my_post_topic,
+					file_file_path = my_post_f
 
 				)
 
@@ -130,9 +130,9 @@ def file( request, file_slug ):
 
 	# get the file
 
-	my_file_obj = FileUploaded.objects.get( slug = file_slug )
+	my_file_obj = FileUploaded.objects.get( file_slug = file_slug )
 
-	my_file = my_file_obj.file
+	my_file = my_file_obj.file_file_path
 
 	my_base = os.path.basename( my_file.path )
 	my_file_name = os.path.splitext( my_base )

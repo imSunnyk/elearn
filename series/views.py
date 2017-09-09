@@ -11,16 +11,17 @@ from login.models import Person
 from groups.models import Group
 from forum.models import Forum
 
-from .forms import CommentForm
+from .forms import CommentForm, AddTopicForm
 
 
 @login_required
 def forum_group( request, series_name ):
 
-	my_threads = SeriesThread.objects.filter( 
-		series_thread_series_id = forum_series.id 
-	)
 	my_forum_series = Series.objects.get( series_name = series_name )
+
+	my_threads = SeriesThread.objects.filter( 
+		series_thread_series_id = my_forum_series.id 
+	)
 
 	context = {
 
@@ -40,13 +41,15 @@ def topic( request, series_name, topic_id ):
 
 	my_comment_form = CommentForm()
 
-	my_files = SeriesFileUploaded.objects.all().filter( 
+	my_files = SeriesFileUploaded.objects.all().filter(
+
 		series_file_thread = SeriesThread.objects.get( id = topic_id ) 
+	
 	)
 
 	for my_file in my_files : 
 
-		my_file.file = str( my_file.file).rsplit('/', 1)[ 1 ]
+		my_file.series_file_file = str( my_file.series_file_file).rsplit('/', 1)[ 1 ]
 
 	context = {
 
@@ -67,7 +70,7 @@ def topic( request, series_name, topic_id ):
 		if my_form.is_valid():
 
 			my_comment = SeriesReply( 
-				series_reply_desc = form.cleaned_data[ "desc" ],
+				series_reply_desc = my_form.cleaned_data[ "desc" ],
 				series_reply_author_id = Person.objects.get( 
 					user_id = request.user.id 
 				).id,
@@ -85,7 +88,7 @@ def topic( request, series_name, topic_id ):
 						id = topic_id 
 					),
 					series_file_reply = my_comment,
-					series_file_file = f
+					series_file_file = my_f
 				)
 
 				my_file.save()	
@@ -96,7 +99,7 @@ def topic( request, series_name, topic_id ):
 @login_required
 def add_thread( request, series_name ):
 
-	my_series = Series.objects.get( name = series_name )
+	my_series = Series.objects.get( series_name = series_name )
 	my_topic_form = AddTopicForm()
 
 	context = {
@@ -112,12 +115,12 @@ def add_thread( request, series_name ):
 		if my_form.is_valid() :
 			
 			my_topic = SeriesThread( 
-				series_thread_name = form.cleaned_data[ "name" ],
-				series_thread_desc = form.cleaned_data[ "desc" ],
+				series_thread_name = my_form.cleaned_data[ "name" ],
+				series_thread_desc = my_form.cleaned_data[ "desc" ],
 				series_thread_author_id = Person.objects.get( 
 					user_id = request.user.id 
 				).id,
-				series_thread_series_id = series.id,
+				series_thread_series_id = my_series.id,
 			)
 
 			my_topic.save()

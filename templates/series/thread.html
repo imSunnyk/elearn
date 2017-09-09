@@ -5,44 +5,18 @@
 	{{ debug }}
 
 	<div class = " col s12 m12 l12 xl12 " >
-
-<!-- 		<nav style = "background-color : #00695c " >
-
-			<div class="nav-wrapper ">
-
-				<div class = " col s12 hide-on-small-only " >
-					
-					<div class = " col s6 " > {{ thread.name }} </div>
-
-					<div class = "right-align col s6">
-
-						<a class="waves-effect waves-light btn" href = "/forum/add_thread/{{ forum.slug }}"> Add Thread </a>
-
-					</div>			
-
-				</div>
-
-				<div class = "col s12 hide-on-med-and-up center-align">
-					
-					<a class="waves-effect waves-light btn"> Add Thread </a>
-
-				</div>
-			
-			</div>
-		
-		</nav>	 -->	
-
+	
 		<div class = "col s12 m12 l12 xl12 ">
 
 			<div class = "card">
 
 				<div class = "card-content">
 
-					<span class = "card-title "> {{ thread.name }} </span>
+					<span class = "card-title "> {{ thread.series_thread_name }} </span>
 
 					<p>
 						
-						{{ thread.desc }}
+						{{ thread.series_thread_desc }}
 
 					</p>
 				
@@ -52,13 +26,13 @@
 
 			{% for file in files %}
 
-				{% if file.reply is None %}
+				{% if file.series_file_reply is None %}
 
 					<div class="chip">
 
-						{{ file.file }}
+						{{ file.series_file_file }}
 
-						<a href = "/series/file/{{ file.slug }}" style = " color : #616161; " >
+						<a href = "/series/file/{{ file.series_file_slug }}" style = " color : #616161; " >
 
 							<i class = "download_chip material-icons">file_download</i>
 
@@ -103,7 +77,7 @@
 										
 										<div  class="truncate" >
 
-											{{ comment.desc }}
+											{{ comment.series_reply_desc }}
 
 										</div>
 
@@ -113,13 +87,13 @@
 
 									{% for file in files %}
 
-										{% if file.reply.id is comment.id %}
+										{% if file.series_file_reply.id is comment.id %}
 
 											<div class="chip">
 
-												{{ file.file }}
+												{{ file.series_file_file }}
 
-												<a href = "/series/file/{{ file.slug }}" style = " color : #616161; " >
+												<a href = "/series/file/{{ file.series_file_slug }}" style = " color : #616161; " >
 
 													<i class = "download_chip material-icons">file_download</i>
 
@@ -135,7 +109,7 @@
 
 							<div class="card-action">
 
-								<p> By {{ comment.author }} </p>
+								<p> By {{ comment.series_reply_author }} </p>
 
 							</div>
 

@@ -34,8 +34,11 @@ def my_course( request, course_slug ) :
 	
 	my_course = Course.objects.all().get( course_slug = course_slug )
 	my_weeks = Week.objects.all().filter( week_course = my_course.id )
-	my_course_group = Group.objects.all().get( course_id = my_course.id, users__in = [ student_id ]  )
-	my_forum = Forum.objects.all().get( group = my_course_group )
+	my_course_group = Group.objects.all().get( 
+		group_course_id = my_course.id, 
+		group_users__in = [ student_id ] 
+	)
+	my_forum = Forum.objects.all().get( forum_group = my_course_group )
 	my_books = Book.objects.all().filter( book_week_id__in = my_weeks )
 
 	context = {
@@ -119,7 +122,10 @@ def course_guide( request, course_slug ):
 def course_resources( request, course_slug ):
 
 	my_course = Course.objects.all().get( course_slug = course_slug )
-	my_resources = Resource.objects.all().filter( course_id = my_course.id, doc_type = "CO" )
+	my_resources = Resource.objects.all().filter( 
+		resource_course_id = my_course.id, 
+		resource_doc_type = "CO"
+	)
 
 	context = {
 
@@ -137,7 +143,10 @@ def course_resources( request, course_slug ):
 def course_resources_activities( request, course_slug ):
 
 	my_course = Course.objects.all().get( course_slug = course_slug )
-	my_resources = Resource.objects.all().filter( course_id = my_course.id, doc_type = "AC" )
+	my_resources = Resource.objects.all().filter( 
+		resource_course_id = my_course.id, 
+		resource_doc_type = "AC"
+	)
 
 	context = {
 

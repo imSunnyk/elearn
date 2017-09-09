@@ -12,30 +12,22 @@ class Group( models.Model ):
 
 	group_name = models.CharField( max_length = 100 )
 	group_slug = models.SlugField()
-	group_location = models.CharField( max_length = 50, blank = True)
+	group_location = models.CharField( max_length = 50 )
 	group_course = models.ForeignKey( 
 		Course,
 		related_name = 'group_course',
-		null = True,
-		blank = True
 	)
 	group_tutors = models.ManyToManyField(
 		Tutor, 
-		related_name = 'group_tutors', 
-		null = True, 
-		blank = True 
+		related_name = 'group_tutors',
 	)
 	group_users = models.ManyToManyField( 
 		Person, 
 		related_name = 'group_users', 
-		null = True, 
-		blank = True 
 	)
 	group_series = models.ForeignKey( 
 		Series, 
-		related_name = 'group_series', 
-		null = True, 
-		blank = True 
+		related_name = 'group_series',
 	)
 
 	# override the save function
@@ -49,24 +41,17 @@ class Group( models.Model ):
 			
 			# iterate group name
 			possible_groups = Group.objects.all().filter( 
-				location = self.location, 
-				course = self.course, 
-				series = self.series 
+				group_location = self.group_location, 
+				group_course = self.group_course, 
+				group_series = self.group_series 
 			)
 			iterator = len( possible_groups )
 
 			# forum creation
 			course_code = Course.objects.all().get( 
-				id = self.course.id 
+				id = self.group_course.id 
 			).course_code
-			self.group_name = "Grupa " 
-			+ str( iterator ) 
-			+ "  " 
-			+ str( course_code ) 
-			+ " " 
-			+ str( self.group_location ) 
-			+ " " 
-			+ str( self.group_series )
+			self.group_name = "Grupa " + str( iterator ) + "  " + str( course_code ) + " " + str( self.group_location ) + " " + str( self.group_series )
 
 			# Newly created object, so set slug
 			self.group_slug = slugify( self.group_name )
@@ -102,10 +87,16 @@ class Group( models.Model ):
 
 	def __unicode__( self ) : 
 
-		return " %s " % ( self.name)
+		return " %s " % ( self.group_name)
 
 	@classmethod
 	def return_student_group( self, stundent_id ):
+
+		print self.objects.values( 
+			"group_name", 
+			"id", 
+			"group_course_id" 
+		).filter( group_users = stundent_id ).values_list( "id" )
 
 		return self.objects.values( 
 			"group_name", 

@@ -33,7 +33,7 @@ class Person( models.Model ):
 
 	user = models.ForeignKey( 
 		User, 
-		related_name = "person_user" 
+		related_name = "user" 
 	)
 	person_profile_pic = models.FileField( 
 		upload_to = profile_pic, 
@@ -49,7 +49,7 @@ class Person( models.Model ):
 	)
 	person_hash_code = models.CharField( max_length = 36, default = "" )
 	person_birthdate = models.DateField()
-	person_series_id = models.ForeignKey( 
+	person_series = models.ForeignKey( 
 		"series.Series", 
 		related_name = "person_user_series" 
 	)

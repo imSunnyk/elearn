@@ -12,7 +12,7 @@ def resource( request, resource_slug ):
 
 	my_res = Resource.objects.all().get( resource_slug = resource_slug )
 
-	my_file = my_res.document_path
+	my_file = my_res.resource_document_path
 
 	my_base = os.path.basename( my_file.path )
 	my_file_name = os.path.splitext( my_base )

@@ -78,7 +78,7 @@
 			    
 			    <li >
 			    
-			    	<a class="waves-effect" href="/series/{{ series.name }}"> 
+			    	<a class="waves-effect" href="/series/{{ series.series_name }}"> 
 				    
 				    	<i class="material-icons">library_books</i> {{ series }} Forum
 
@@ -119,7 +119,7 @@
 
 									<li class = "course_objects">
 
-								    	<a class="waves-effect" href="/forum/{{ course.1.slug }}">
+								    	<a class="waves-effect" href="/forum/{{ course.1.forum_slug }}">
 
 								    		<i class="material-icons"> forum </i>  Student Forum
 
@@ -168,6 +168,8 @@
 
 					{% block content %}
 					
+					{{ user_data }}
+
 					{% endblock content %}
 
 				</div>

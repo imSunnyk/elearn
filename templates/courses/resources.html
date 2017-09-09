@@ -23,7 +23,11 @@
 
 		{% for resource in resources %}
 
-			<p> <a href = "/resources/resource/{{ resource.slug }}" > {{ resource.name }} </a></p>
+			<p>
+			
+				<a href = "/resources/resource/{{ resource.resource_slug }}" > {{ resource.resource_name }} </a>
+
+			</p>
 
 		{% endfor %}
 

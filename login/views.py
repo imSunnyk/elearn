@@ -41,8 +41,8 @@ def login_page( request ):
 
 			# login the user
 			my_user = authenticate( 
-				username = form.cleaned_data[ "username" ], 
-				password = form.cleaned_data[ "password" ]
+				username = my_form.cleaned_data[ "username" ], 
+				password = my_form.cleaned_data[ "password" ]
 			)
 
 			#if the account is real
