@@ -7,15 +7,29 @@ from .forms import GroupFormAdmin
 class GroupAdmin( admin.ModelAdmin ) :
 	form = GroupFormAdmin
 
-	exclude = ( "slug", "name", "group_form_identifier" )
+	exclude = ( 
+		"group_slug", 
+		"group_name", 
+		"group_form_identifier" )
 
 	fieldsets = (
 		(None, {
-			'fields': ('location', 'course', 'tutors', 'users', 'series', 'group_form_identifier'),
+			'fields': (
+				'group_location', 
+				'group_course', 
+				'group_tutors', 
+				'group_users', 
+				'group_series', 
+				'group_form_identifier'),
 		}),
 	)
 
-	search_fields = [ "course__name", "course__code", "location", "series__name" ]
+	search_fields = [ 
+		"group_course__name", 
+		"group_course__code", 
+		"group_location", 
+		"group_series__name" 
+	]
 
 # register the models
 admin.site.register( Group, GroupAdmin )
