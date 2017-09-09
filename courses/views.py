@@ -1,9 +1,12 @@
 import os
 
-from django.shortcuts import render
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.http import HttpResponse
 from django.core import serializers
+from django.shortcuts import render
+
 
 from forum.models import Forum
 from login.models import Person
@@ -12,32 +15,6 @@ from resources.models import Resource
 from courses.models import Course, Week, Book, Subchapter, Page
 from django.contrib.auth.models import User
 
-# define the global context
-def GlobalContext( request ):
-
-	user_data = Person.objects.all().get( user_id = request.user.id ) # get the user_data
-	student_id = Person.return_student_id( request.user.id ) # get the student id from the user_id
-	courses_ids = Person.return_student_courses( student_id ) # get the ids of the courses the student attends
-	courses_list = Course.return_courses( courses_ids = courses_ids ) # get the courses
-	groups = Group.return_student_group( student_id ) # get the groups the student is part of	
-	groups_id = []
-
-	for group in groups :
-
-		groups_id.append( group[ "id" ] )
-
-	forums = Forum.objects.all().filter( group_id__in = groups_id ) 
-	
-
-	return {
-
-		"user_data" : user_data,
-		"student_id" : student_id,
-		"courses_ids" : courses_ids ,
-		"courses_list" : zip( courses_list, forums ),
-		"group_id" : groups_id,
-		"series" : user_data.series
-	}
 
 @login_required
 def my_courses( request ) :
@@ -45,7 +22,6 @@ def my_courses( request ) :
 	context = {
 
 		"debug" : "",
-		"base_info" : GlobalContext( request ),
 
 	}
 
@@ -65,11 +41,10 @@ def my_course( request, course_slug ) :
 	context = {
 
 		"debug" : "",
-		"base_info" : GlobalContext( request ),
 		"course" : my_course ,
 		"weeks" : my_weeks,
 		"books" : my_books,
-		"forum" : my_forum
+		"forum" : my_forum,
 
 	}
 
@@ -78,21 +53,20 @@ def my_course( request, course_slug ) :
 @login_required
 def week( request, course_slug, week_slug ) :
 	
-	course = Course.objects.all().get( course_slug = course_slug )
-	week = Week.objects.all().get( week_slug = week_slug, week_course_id = course ) 
-	books = Book.objects.all().filter( book_week = week )
+	my_course = Course.objects.all().get( course_slug = course_slug )
+	my_week = Week.objects.all().get( week_slug = week_slug, week_course_id = my_course ) 
+	my_books = Book.objects.all().filter( book_week = my_week )
 
 	context = {
 
 		"debug" : "",
-		"course" : course,
-		"week" : week,
-		"books" : books,
-		"base_info" : GlobalContext( request ),
+		"course" : my_course,
+		"books" : my_books,
+		"week" : my_week,
 
 	}
 
-	return render( request, "courses/week.html", context )
+	return render( request, "courses/week.html", context  )
 
 @login_required
 def book( request, course_slug, week_slug, book_slug ) :
@@ -106,12 +80,11 @@ def book( request, course_slug, week_slug, book_slug ) :
 	context = {
 
 		"debug" : "",
+		"subchapters" : my_subchapters ,
 		"course" : my_course,
+		"pages" : my_pages ,
 		"week" : my_week,
 		"book" : my_book,
-		"subchapters" : my_subchapters ,
-		"pages" : my_pages ,
-		"base_info" : GlobalContext( request ),
 
 	}
 
@@ -121,19 +94,19 @@ def book( request, course_slug, week_slug, book_slug ) :
 def course_guide( request, course_slug ):
 	# get the file
 
-	guide = Course.objects.get( course_slug = course_slug )
+	my_guide = Course.objects.get( course_slug = course_slug )
 
-	file = guide.course_guide
+	my_file = my_guide.course_guide
 
-	base = os.path.basename( file.path )
-	file_name = os.path.splitext( base )
+	my_base = os.path.basename( my_file.path )
+	my_file_name = os.path.splitext( my_base )
 
     # get the file data
-	data = open( file.path, "r" )
+	my_data = open( my_file.path, "r" )
     
     # download 
-	response = HttpResponse( data.read() , content_type='application/pdf')
-	response[ 'Content-Length' ] = os.path.getsize( file.path )
+	response = HttpResponse( my_data.read() , content_type='application/pdf')
+	response[ 'Content-Length' ] = os.path.getsize( my_file.path )
 	response['Content-Disposition'] = 'inline;filename=some_file.pdf' 
 
 	return response
@@ -141,16 +114,15 @@ def course_guide( request, course_slug ):
 @login_required
 def course_resources( request, course_slug ):
 
-	course = Course.objects.all().get( course_slug = course_slug )
-	resources = Resource.objects.all().filter( course_id = course.id, doc_type = "CO" )
+	my_course = Course.objects.all().get( course_slug = course_slug )
+	my_resources = Resource.objects.all().filter( course_id = my_course.id, doc_type = "CO" )
 
 	context = {
 
-		"resources" : resources,
-		"course" : course,
-		"type" : "Activities resources",
 		"link" : "course_resources_activities",
-		"base_info" : GlobalContext( request )
+		"type" : "Activities resources",
+		"resources" : my_resources,
+		"course" : my_course,
 
 	}
 
@@ -159,16 +131,15 @@ def course_resources( request, course_slug ):
 @login_required
 def course_resources_activities( request, course_slug ):
 
-	course = Course.objects.all().get( course_slug = course_slug )
-	resources = Resource.objects.all().filter( course_id = course.id, doc_type = "AC" )
+	my_course = Course.objects.all().get( course_slug = course_slug )
+	my_resources = Resource.objects.all().filter( course_id = my_course.id, doc_type = "AC" )
 
 	context = {
 
-		"resources" : resources,
-		"course" : course,
-		"type" : "Activities resources",
 		"link" : "course_resources_activities",
-		"base_info" : GlobalContext( request )
+		"type" : "Activities resources",
+		"resources" : my_resources,
+		"course" : my_course,
 
 	}
 
@@ -180,20 +151,18 @@ def course_resources_activities( request, course_slug ):
 @login_required
 def get_students_by_course( request, course_id ):
 	
-	student_ids = Person.objects.filter( active_courses = course_id ).values( "user_id" )
+	my_student_ids = Person.objects.filter( active_courses = course_id ).values( "user_id" )
+	my_users = list()
 
-	users = list()
+	for my_student_id in my_student_ids : 
 
-	for student_id in student_ids : 
+		my_user = User.objects.get( id = my_student_id[ "user_id" ]  )
+		my_users.append( my_user )
 
-		user = User.objects.get( id = student_id[ "user_id" ]  )
-
-		users.append( user )
-
-	students = serializers.serialize( 
+	my_students = serializers.serialize( 
 	 	"json", 
-	 	users,
+	 	my_users,
 	 	fields = ( "username" )
 	)
 
-	return HttpResponse( students );
+	return HttpResponse( my_students );

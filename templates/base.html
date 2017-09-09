@@ -49,10 +49,10 @@
 								</a>
 
 							</center>
+
+							<span class="name"> {{ user_data.first_name }} {{ user_data.last_name }} </span>
 							
-							<span class="name"> Jondoe{{ logged_data.first_name }} {{ logged_data.last_name }} </span>
-							
-							<span class="email"> {{ logged_data.email }} </span>
+							<span class="email"> {{ user_data.email }} </span>
 			   				
 			   			</div>
 	                
@@ -78,15 +78,15 @@
 			    
 			    <li >
 			    
-			    	<a class="waves-effect" href="/series/{{ base_info.series.name }}"> 
+			    	<a class="waves-effect" href="/series/{{ series.name }}"> 
 				    
-				    	<i class="material-icons">library_books</i> {{ base_info.series }} Forum
+				    	<i class="material-icons">library_books</i> {{ series }} Forum
 
 				    </a>
 
 			    </li>
 
-			    {% for course in base_info.courses_list %}
+			    {% for course in courses_list %}
 
 					<ul class="collapsible" data-collapsible="accordion">
 						
@@ -127,8 +127,6 @@
 
 									</li>
 
-
-
 							    </ul>
 
 							</div>
@@ -139,29 +137,6 @@
 
 				{% endfor %}
 
-<!-- 			    <li>
-
-			    	<div class="divider"></div>
-
-			    </li>
-
-			    <li>
-			    
-			    	<a class="subheader"> Options </a>
-
-			    </li>
-			    
-			    <li >
-			    
-			    	<a class="waves-effect" href="/users/profile"> 
-				    
-				    	<i class="material-icons">account_box</i> My account
-
-				    </a>
-
-			    </li> -->
-
-		  
 			</ul>
 
 			<nav style = "background-color : #00695c; position:fixed;" >

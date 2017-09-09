@@ -48,24 +48,17 @@ class Group( models.Model ):
 				last_group_id = Group.objects.latest( "id" ).id
 				
 				forum = Forum( name = forum_name, group_id = last_group_id + 1, series_id = self.series.id )
-				ok = 1
+				
+				forum.save()
 
 			except : 
 
 				forum = Forum( name = forum_name, group_id = 1, series_id = self.series.id )
-				ok = 1
-
-
-
-
 				
-			
-
-		super( Group, self ).save( *args, **kwargs )
+				forum.save()
 		
-		if ok is 1 : 
+		super( Group, self ).save( *args, **kwargs )
 
-			forum.save()
 
 	def __unicode__( self ) : 
 
@@ -74,4 +67,4 @@ class Group( models.Model ):
 	@classmethod
 	def return_student_group( self, stundent_id ):
 
-		return self.objects.values( "name", "id", "course_id" ).filter( users = stundent_id )
+		return self.objects.values( "name", "id", "course_id" ).filter( users = stundent_id ).values_list( "id" )
