@@ -30,9 +30,9 @@ TEMPLATE_DIRS = (
 SECRET_KEY = 'k@n*bg1dq1x62ggq!w$zt7l&-6o_9m7)5x^9%n@trgzwz22+pz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ "188.166.6.215" ]
 
 
 # Application definition
