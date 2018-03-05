@@ -88,7 +88,7 @@
 				
 				{% autoescape off %}
 
-					{{ page.page_desc }}	
+					{{ page.page_desc | safe }}	
 
 				{% endautoescape %}
 
