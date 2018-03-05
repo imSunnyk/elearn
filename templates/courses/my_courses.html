@@ -8,10 +8,12 @@
 {% block content %}
 	
 	{{ debug }}
+
+	{{ my_student_data }}
 	
 	<div class = "container-fluid">
 
-		{% for course in courses_list %}
+		{% for course in courses_ids %}
 
 			<div class = "col s12 m12 l12 xl12" >
 				
@@ -21,11 +23,11 @@
 
 						<div class = "card-content" >
 							
-								<span class = "card-title" title = "{{ course.0.course_name }}" > 
+								<span class = "card-title" title = "{{ course.course_name }}" > 
 									
 									<div  class="truncate" >
 
-										{{ course.0.course_name }}
+										{{ course.course_name }}
 
 									</div>
 
@@ -35,7 +37,7 @@
 
 						<div class="card-action">
 
-							<a href="course/{{ course.0.course_slug }}"> Go to the course </a>
+							<a href="course/{{ course.course_slug }}"> Go to the course </a>
 
 						</div>
 

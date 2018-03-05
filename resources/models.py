@@ -14,7 +14,7 @@ def file_path( self, file ):
 	filename, file_extension = os.path.splitext( file )
 
 	# define the folder containing the file
-	if self.doc_type == "AC" : 
+	if self.resource_doc_type == "AC" : 
 
 		res_type = "activities"
 
@@ -24,7 +24,7 @@ def file_path( self, file ):
 
 
 	return "{0}/{1}/{2}{3}".format(
-		self.course.name, res_type, filename, file_extension
+		self.resource_course.course_name, res_type, filename, file_extension
 	)
 
 class Resource( models.Model ):

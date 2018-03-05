@@ -78,7 +78,7 @@ class PageAdmin( admin.ModelAdmin ) :
 
 class FileAdmin( admin.ModelAdmin ):
 
-	exclude = ( "file_slug", )
+	exclude = ( "resource_slug", )
 	search_fields = [ "resource_course__course_name" ]
 
 

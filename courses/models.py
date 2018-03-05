@@ -135,7 +135,7 @@ class Page( models.Model ):
     if not self.id:
       
       # Newly created object, so set slug
-      self.page_slug = slugify( self.page_name )
+      self.page_slug = str( uuid.uuid4() ).replace( "-" , "") 
 
     super( Page, self ).save( *args, **kwargs )
 

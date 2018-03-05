@@ -6,11 +6,11 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.core import serializers
-
+from django.db.models import Q
 
 from courses.models import Course, Week, Book, Subchapter, Page
 from resources.models import Resource 
-from login.models import Person
+from login.models import Person, Tutor
 from groups.models import Group
 from forum.models import Forum
 
@@ -31,13 +31,20 @@ def my_courses( request ) :
 def my_course( request, course_slug ) :
 
 	student_id = Person.return_student_id( request.user.id )
-	
+	try : 
+		possible_tutor = Tutor.objects.all().get( person_id = student_id )
+	except :
+		possible_tutor = 0
+
 	my_course = Course.objects.all().get( course_slug = course_slug )
 	my_weeks = Week.objects.all().filter( week_course = my_course.id )
-	my_course_group = Group.objects.all().get( 
+
+
+	my_course_group = Group.objects.all().filter( 
+		Q( group_users__in = [ student_id ] ) | Q( group_tutors__in = [ possible_tutor ] ),
 		group_course_id = my_course.id, 
-		group_users__in = [ student_id ] 
 	)
+
 	my_forum = Forum.objects.all().get( forum_group = my_course_group )
 	my_books = Book.objects.all().filter( book_week_id__in = my_weeks )
 

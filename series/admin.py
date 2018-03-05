@@ -3,7 +3,7 @@ from .models import Series
 
 class SeriesAdmin( admin.ModelAdmin ):
 
-	pass
+	exclude = ( "series_slug", )
 
 	
 admin.site.register( Series, SeriesAdmin )

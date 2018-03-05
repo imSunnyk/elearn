@@ -70,7 +70,7 @@ class Group( models.Model ):
 					forum_series_id = self.group_series.id 
 				)
 				
-				forum.save()
+				group_forum.save()
 
 			except : 
 
@@ -90,16 +90,20 @@ class Group( models.Model ):
 		return " %s " % ( self.group_name)
 
 	@classmethod
-	def return_student_group( self, stundent_id ):
+	def return_student_group( self, person_id, person_type ):
 
-		print self.objects.values( 
-			"group_name", 
-			"id", 
-			"group_course_id" 
-		).filter( group_users = stundent_id ).values_list( "id" )
+		if person_type == "ST":
+			return self.objects.values( 
+				"group_name", 
+				"id", 
+				"group_course_id" 
+			).filter( group_users = person_id ).values_list( "id" )
 
-		return self.objects.values( 
-			"group_name", 
-			"id", 
-			"group_course_id" 
-		).filter( group_users = stundent_id ).values_list( "id" )
+		elif person_type == "TU":
+
+			tutor_id = Tutor.objects.all().get( person_id = person_id )
+			return self.objects.values( 
+				"group_name", 
+				"id", 
+				"group_course_id" 
+			).filter( group_tutors = tutor_id ).values_list( "id" )

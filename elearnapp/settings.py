@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'resources.apps.ResourcesConfig',
     'bootstrap3',
 
+
 ]
 
 MIDDLEWARE = [

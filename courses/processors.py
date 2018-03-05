@@ -15,12 +15,10 @@ def courseinfo( request ) :
 
 		my_courses_ids = Person.return_student_courses( my_student_data.id ) 
 		my_courses_list = Course.return_courses( courses_ids = my_courses_ids )     
+
+		my_groups = Group.return_student_group( my_student_data.id, my_student_data.person_type )
 		
-		my_groups = Group.return_student_group( my_student_data.id )	
 		my_forums = Forum.objects.all().filter( forum_group_id__in = my_groups )
-
-
-		print my_groups
 
 		return {
 
@@ -30,8 +28,9 @@ def courseinfo( request ) :
 			"courses_ids" : my_courses_ids ,
 			"courses_list" : zip( my_courses_list, my_forums ),
 			"series" : my_student_data.person_series
+
 		}
 
 	except : 
 
-	 	return {}
+	  	return { "global_debug" : "ERR" }

@@ -63,7 +63,7 @@ class Person( models.Model ):
 	def save( self, *args, **kwargs ):
 		
 		# if a new user is created, and it is a tutor, create a new tutor object
-		if not self.id and self.person_type == "TU" :
+		if self.person_type == "TU" and not self.id :
 
 			super( Person, self ).save( *args, **kwargs )
 			tutor = Tutor( person = self )
@@ -81,11 +81,9 @@ class Person( models.Model ):
 		return self.objects.all().get( user_id = name_id ).id
 
 	@classmethod
-	def return_student_courses( self, stundent_id ):
+	def return_student_courses( self, student_id ):
 
-		return self.objects.values_list( 
-			"person_active_courses" 
-		).filter( id = stundent_id)
+		return self.objects.all().get( id = student_id ).person_active_courses.all()
 
 
 	class Meta :
