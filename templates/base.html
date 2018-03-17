@@ -33,23 +33,19 @@
 			<ul id = "slide-out" class="side-nav fixed">
 
 			    <li>
+
+			    	<div class="logoView" style="margin-bottom: 0px;">
+
+						<img class="responsive-img" src="{% static 'img/logo.png' %}" />
+
+			    	</div>
 	                
 	                <div class="userView" style="margin-bottom: 0px;">
 	                
 	                	<img class="background back-img" src="/static/material/imgs/sidenav.svg">
 	                    
-						    <div class = "user-info">
-			      
-						    <center>
-
-								<a href="#!user">
-								
-									<img class="circle" src="{% static 'documents/images/generic.png' %}">
-								
-								</a>
-
-							</center>
-
+						<div class = "user-info">
+			     
 							<span class="name"> {{ user_data.first_name }} {{ user_data.last_name }} </span>
 							
 							<span class="email"> {{ user_data.email }} </span>

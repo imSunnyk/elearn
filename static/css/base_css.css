@@ -1,4 +1,3 @@
-/* The style for the main documents page */
 .documents_panel{
 	margin-top: 20px;
 }
@@ -7,6 +6,13 @@
 
 	margin-top: 20px;
 
+}
+
+.logoView{
+
+	padding-left: 30px;
+	padding-right: 40px;
+	padding-top: 25px;
 }
 
 .back-img{
